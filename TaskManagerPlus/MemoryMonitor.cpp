@@ -1,12 +1,13 @@
 #include <iomanip>
 #include <iostream>
-#include <cmath>
 #include "MemoryMonitor.h"
+#include "MonitorUtils.h"
 
 void MemoryMonitor::start() {
 	update();
 	isRunning = true;
 	memoryThread = std::thread(&MemoryMonitor::monitorLoop, this);
+	//monitorLoop();
 }
 
 void MemoryMonitor::update() {
@@ -36,14 +37,11 @@ void MemoryMonitor::calculateAvail() {
 }
 
 void MemoryMonitor::monitorLoop() {
-	std::cout << "You have " << std::fixed << std::setprecision(1) << totalPhysMem << "GB total memory available in your system.\n";
-	std::cout << "You have " << std::fixed << std::setprecision(1) << availPhysMem << "GB available memory available in your system.\n";
+	//std::cout << "You have " << std::fixed << std::setprecision(1) << totalPhysMem << "GB total memory available in your system.\n";
+	//std::cout << "You have " << std::fixed << std::setprecision(1) << availPhysMem << "GB available memory available in your system.\n";
 	while (isRunning) {
 		update();
-		currentPhysMem = calculateUtilisation();
-		std::cout << "\r" << std::string(30, ' ') << "\r";
-		std::cout << "Current memory utilisation: " << std::fixed << currentPhysMem << std::setprecision(1) << "%" << std::flush;
-		Sleep(1000);
+		systemStatus.memoryUsage = calculateUtilisation();
 	}
 }
 

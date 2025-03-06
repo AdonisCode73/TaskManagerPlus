@@ -10,12 +10,18 @@
     <ClCompile Include="CpuMonitor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MonitorUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MemoryMonitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CpuMonitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MonitorUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

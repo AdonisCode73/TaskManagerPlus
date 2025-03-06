@@ -1,9 +1,5 @@
-#include <tchar.h>
-#include <iostream>
-#include <Pdh.h>
-#include <atomic>
-#include <iomanip>
 #include "CpuMonitor.h"
+#include "MonitorUtils.h"
 
 void CpuMonitor::start() {
 	PdhOpenQuery(NULL, NULL, &cpuQuery);
@@ -12,6 +8,7 @@ void CpuMonitor::start() {
 
 	isRunning = true;
 	monitorThread = std::thread(&CpuMonitor::monitorLoop, this);
+	//monitorLoop();
 }
 
 void CpuMonitor::stop() {
@@ -31,9 +28,10 @@ double CpuMonitor::getUsage() {
 
 void CpuMonitor::monitorLoop() {
 	while (isRunning) {
-		currentVal = getUsage();
-		std::cout << "\r" << std::string(30, ' ') << "\r";
-		std::cout << "CPU Usage: " << std::fixed << std::setprecision(1) << currentVal << " %" << std::flush;
+		systemStatus.cpuUsage = getUsage();
 		Sleep(1000);
+		/*std::cout << "\r" << std::string(30, ' ') << "\r";
+		std::cout << "CPU Usage: " << std::fixed << std::setprecision(1) << currentVal << " %" << std::flush;
+		Sleep(1000);*/
 	}
 }

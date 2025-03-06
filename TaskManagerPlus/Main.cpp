@@ -2,22 +2,19 @@
 #include <curses.h>
 #include "CpuMonitor.h"
 #include "MemoryMonitor.h"
+#include "MonitorUtils.h"
 
 int main()
 {
-	CpuMonitor cpuMonitor;
-	MemoryMonitor memoryMonitor;
+	MonitorUtils utilMonitor;
 
 	std::cout << "\n**Beginning System Monitoring**\n";
 
-	memoryMonitor.start();
-	cpuMonitor.start();
-
 	std::cout << "****Press Enter to exit****\n";
-	std::cin.get();
+	utilMonitor.start();
+	std::cin.get(); // TODO: Come up with a better solution to input not being recognised
 
-	cpuMonitor.stop();
-	memoryMonitor.stop();
+	utilMonitor.stop();
 	std::cout << "Safely Exiting application.";
 
 	/*

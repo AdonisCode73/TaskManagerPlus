@@ -1,0 +1,31 @@
+#pragma once
+#include <mutex>
+#include <thread>
+
+struct SystemStatus {
+	std::atomic <double> cpuUsage{ 0.0 };
+	std::atomic <double> memoryUsage{ 0.0 };
+};
+extern	SystemStatus systemStatus;
+
+class MonitorUtils {
+public:
+	void start();
+
+	void stop();
+
+	bool isRunningCheck();
+
+private:
+	COORD initialCursorPos;
+
+	std::thread monitorThread;
+
+	void saveCursorPosition();
+
+	void restoreCursorPosition();
+
+	void monitorUtil();
+
+	bool isRunning = false;
+};
