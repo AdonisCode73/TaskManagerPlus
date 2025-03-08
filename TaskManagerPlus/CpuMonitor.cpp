@@ -8,7 +8,6 @@ void CpuMonitor::start() {
 
 	isRunning = true;
 	monitorThread = std::thread(&CpuMonitor::monitorLoop, this);
-	//monitorLoop();
 }
 
 void CpuMonitor::stop() {
@@ -30,8 +29,5 @@ void CpuMonitor::monitorLoop() {
 	while (isRunning) {
 		systemStatus.cpuUsage = getUsage();
 		Sleep(1000);
-		/*std::cout << "\r" << std::string(30, ' ') << "\r";
-		std::cout << "CPU Usage: " << std::fixed << std::setprecision(1) << currentVal << " %" << std::flush;
-		Sleep(1000);*/
 	}
 }

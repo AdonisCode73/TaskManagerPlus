@@ -12,7 +12,6 @@ public:
 
 	double getUsage();
 private:
-	//std::atomic<double> currentVal{ 0.0 };
 	std::thread monitorThread;
 	bool isRunning = false;
 

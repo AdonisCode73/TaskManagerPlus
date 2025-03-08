@@ -7,7 +7,6 @@ void MemoryMonitor::start() {
 	update();
 	isRunning = true;
 	memoryThread = std::thread(&MemoryMonitor::monitorLoop, this);
-	//monitorLoop();
 }
 
 void MemoryMonitor::update() {
@@ -25,20 +24,18 @@ void MemoryMonitor::stop() {
 }
 
 double MemoryMonitor::calculateUtilisation() {
-	return 100 - ((availPhysMem / totalPhysMem) * 100);
+	return 100 - ((systemStatus.availMemory / systemStatus.totalMemory) * 100); 
 }
 
 void MemoryMonitor::calculateTotal() {
-	totalPhysMem = memInfo.ullTotalPhys / (1024.0 * 1024.0 * 1024.0);
+	systemStatus.totalMemory = memInfo.ullTotalPhys / (1024.0 * 1024.0 * 1024.0);
 }
 
 void MemoryMonitor::calculateAvail() {
-	availPhysMem = memInfo.ullAvailPhys / (1024.0 * 1024.0 * 1024.0);
+	systemStatus.availMemory = memInfo.ullAvailPhys / (1024.0 * 1024.0 * 1024.0);
 }
 
 void MemoryMonitor::monitorLoop() {
-	//std::cout << "You have " << std::fixed << std::setprecision(1) << totalPhysMem << "GB total memory available in your system.\n";
-	//std::cout << "You have " << std::fixed << std::setprecision(1) << availPhysMem << "GB available memory available in your system.\n";
 	while (isRunning) {
 		update();
 		systemStatus.memoryUsage = calculateUtilisation();

@@ -7,12 +7,15 @@
 int main()
 {
 	MonitorUtils utilMonitor;
+	static std::string exitKey;
 
 	std::cout << "\n**Beginning System Monitoring**\n";
 
 	std::cout << "****Press Enter to exit****\n";
 	utilMonitor.start();
-	std::cin.get(); // TODO: Come up with a better solution to input not being recognised
+	
+	while (utilMonitor.isRunningCheck()) {
+	}
 
 	utilMonitor.stop();
 	std::cout << "Safely Exiting application.";

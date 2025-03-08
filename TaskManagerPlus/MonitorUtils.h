@@ -5,6 +5,8 @@
 struct SystemStatus {
 	std::atomic <double> cpuUsage{ 0.0 };
 	std::atomic <double> memoryUsage{ 0.0 };
+	std::atomic <double> availMemory{ 0.0 };
+	std::atomic <double> totalMemory{ 0.0 };
 };
 extern	SystemStatus systemStatus;
 
@@ -28,4 +30,6 @@ private:
 	void monitorUtil();
 
 	bool isRunning = false;
+
+	bool jumpCursor = true;
 };
