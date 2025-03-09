@@ -1,6 +1,9 @@
 #pragma once
 #include <mutex>
 #include <thread>
+#include <windows.h>
+#include <iostream>
+#include <iomanip>
 
 struct SystemStatus {
 	std::atomic <double> cpuUsage{ 0.0 };

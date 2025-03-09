@@ -18,7 +18,7 @@ int main()
 	}
 
 	utilMonitor.stop();
-	std::cout << "Safely Exiting application.";
+	std::cout << "\nSafely Exiting application.";
 
 	/*
 	initscr();            // Initialize ncurses mode

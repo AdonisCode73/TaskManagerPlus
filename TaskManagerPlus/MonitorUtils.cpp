@@ -1,9 +1,6 @@
 #include "CpuMonitor.h"
 #include "MemoryMonitor.h"
 #include "MonitorUtils.h"
-#include <windows.h>
-#include <iostream>
-#include <iomanip>
 
 CpuMonitor cpuMonitor;
 MemoryMonitor memoryMonitor;
@@ -59,7 +56,7 @@ void MonitorUtils::monitorUtil() {
 		std::cout << "Current memory utilisation: " << std::fixed << systemStatus.memoryUsage << std::setprecision(1) << "%" << std::flush << std::endl;
 
 		std::cout << "\r" << std::string(30, ' ') << "\r";
-		std::cout << "CPU Usage: " << std::fixed << std::setprecision(1) << systemStatus.cpuUsage << " %" << std::flush;
+		std::cout << "CPU Usage: " << std::fixed << std::setprecision(1) << systemStatus.cpuUsage << " %" << std::flush << std::endl;
 		if (jumpCursor) {
 			restoreCursorPosition();
 		}
