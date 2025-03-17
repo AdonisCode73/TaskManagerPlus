@@ -1,23 +1,20 @@
 #pragma once
-
-#include <windows.h>
-#include <thread>
 #include "MonitorUtils.h"
 
 class MemoryMonitor {
-	public:
 
+	public:
 		void start();
 
 		void stop();
-
-		void update();
 
 	private:
 		double totalPhysMem;
 		double availPhysMem;
 		double currentPhysMem;
+
 		MEMORYSTATUSEX memInfo;
+
 		std::thread memoryThread;
 		bool isRunning = false;
 
@@ -28,4 +25,6 @@ class MemoryMonitor {
 		void calculateTotal();
 
 		void monitorLoop();
+		
+		void update();
 };

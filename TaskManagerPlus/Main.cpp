@@ -1,9 +1,6 @@
 #include <iostream>
 #include <curses.h>
-#include "CpuMonitor.h"
-#include "MemoryMonitor.h"
 #include "MonitorUtils.h"
-#include <CL/cl.h>
 
 int main()
 {

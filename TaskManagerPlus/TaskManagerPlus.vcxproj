@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CpuMonitor.cpp" />
+    <ClCompile Include="DiskMonitor.cpp" />
     <ClCompile Include="GpuMonitor.cpp" />
     <ClCompile Include="Main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -145,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CpuMonitor.h" />
+    <ClInclude Include="DiskMonitor.h" />
     <ClInclude Include="GpuMonitor.h" />
     <ClInclude Include="MemoryMonitor.h" />
     <ClInclude Include="MonitorUtils.h" />

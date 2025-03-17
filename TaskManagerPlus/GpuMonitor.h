@@ -1,7 +1,5 @@
 #pragma once
-#pragma once
 #include "MonitorUtils.h"
-#include <iostream>
 //#include "CL/cl.h"
 #include "nvml.h"
 
@@ -13,17 +11,12 @@ class GpuMonitor {
 		void stop();
 
 	private:
-
 		nvmlDevice_t device;
-
 		nvmlReturn_t result;
-
 		nvmlMemory_t memInfo;
-
 		nvmlUtilization_t utilization;
 
 		bool isRunning;
-
 		std::thread gpuThread;
 
 		void initNVML();

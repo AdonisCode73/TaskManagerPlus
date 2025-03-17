@@ -1,12 +1,10 @@
-#include "CpuMonitor.h"
-#include "MemoryMonitor.h"
 #include "MonitorUtils.h"
-#include "GpuMonitor.h"
-
 
 CpuMonitor cpuMonitor;
 MemoryMonitor memoryMonitor;
 GpuMonitor gpuMonitor;
+DiskMonitor diskMonitor;
+
 SystemStatus systemStatus;
 
 
@@ -14,6 +12,7 @@ void MonitorUtils::start() {
 	cpuMonitor.start();
 	memoryMonitor.start();
 	gpuMonitor.start();
+	diskMonitor.start();
 
 	isRunning = true;
 	monitorThread = std::thread(&MonitorUtils::monitorUtil, this);
@@ -31,12 +30,12 @@ void MonitorUtils::stop() {
 	cpuMonitor.stop();
 	memoryMonitor.stop();
 	gpuMonitor.stop();
+	diskMonitor.stop();
 	isRunning = false;
 
 	if (monitorThread.joinable()) {
 		monitorThread.join();
 	}
-
 }
 
 void MonitorUtils::saveCursorPosition() {
@@ -59,6 +58,10 @@ void MonitorUtils::monitorUtil() {
 	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.vramTotalMemory << "GB total memory available in your system.\n";
 	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.vramAvailMemory << "GB available memory in your system.\n";
 
+	std::cout << "\nDISK:\n";
+	std::cout << "Total Space: " << systemStatus.totalDisk << " GB total memory available in your system.\n";
+	std::cout << "Free Space: " << systemStatus.availDisk << " GB available memory in your system.\n";
+
 	std::cout << "\nCurrent utilisation:\n";
 	saveCursorPosition();
 
@@ -74,6 +77,15 @@ void MonitorUtils::monitorUtil() {
 		
 		std::cout << "\r" << std::string(30, ' ') << "\r";
 		std::cout << "Memory Controller Usage: " << std::fixed << std::setprecision(1) << systemStatus.memControllerUsage << " %" << std::flush << std::endl;
+		
+		std::cout << "\r" << std::string(30, ' ') << "\r";
+		std::cout << "Disk Read Usage: " << std::fixed << std::setprecision(1) << systemStatus.readDisk << "KB/s" << std::flush << std::endl;
+		
+		std::cout << "\r" << std::string(30, ' ') << "\r";
+		std::cout << "Disk Write Usage: " << std::fixed << std::setprecision(1) << systemStatus.writeDisk << "KB/s" << std::flush << std::endl;
+		
+		std::cout << "\r" << std::string(30, ' ') << "\r";
+		std::cout << "Disk Utilisation: " << std::fixed << std::setprecision(1) << systemStatus.diskTime << " %" << std::flush << std::endl;
 		if (jumpCursor) {
 			restoreCursorPosition();
 		}
