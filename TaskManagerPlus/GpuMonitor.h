@@ -2,18 +2,37 @@
 #pragma once
 #include "MonitorUtils.h"
 #include <iostream>
-#include "CL/cl.h"
+//#include "CL/cl.h"
+#include "nvml.h"
 
 class GpuMonitor {
-
 
 	public:
 		void start();
 
 		void stop();
 
-
 	private:
+
+		nvmlDevice_t device;
+
+		nvmlReturn_t result;
+
+		nvmlMemory_t memInfo;
+
+		nvmlUtilization_t utilization;
+
+		bool isRunning;
+
+		std::thread gpuThread;
+
+		void initNVML();
+
+		void monitorLoop();
+
+		void update();
+		
+		/*
 		cl_uint platformCount;
 		cl_uint num_devices;
 
@@ -23,10 +42,8 @@ class GpuMonitor {
 		cl_platform_id platformID;
 
 		cl_device_id deviceID;
-
-		void print_data();
-
 		void calculateTotalMem();
 
 		void calculateAvailMem();
+		*/
 };

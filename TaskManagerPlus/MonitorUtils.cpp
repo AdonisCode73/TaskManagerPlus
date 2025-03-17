@@ -30,6 +30,7 @@ bool MonitorUtils::isRunningCheck() {
 void MonitorUtils::stop() {
 	cpuMonitor.stop();
 	memoryMonitor.stop();
+	gpuMonitor.stop();
 	isRunning = false;
 
 	if (monitorThread.joinable()) {
@@ -50,13 +51,15 @@ void MonitorUtils::restoreCursorPosition() {
 }
 
 void MonitorUtils::monitorUtil() {
-	std::cout << "RAM:\n";
+	std::cout << "\nRAM:\n";
 	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.ramTotalMemory << "GB total memory available in your system.\n";
 	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.ramAvailMemory << "GB available memory in your system.\n";
 	
-	std::cout << "VRAM:\n";
+	std::cout << "\nVRAM:\n";
 	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.vramTotalMemory << "GB total memory available in your system.\n";
+	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.vramAvailMemory << "GB available memory in your system.\n";
 
+	std::cout << "\nCurrent utilisation:\n";
 	saveCursorPosition();
 
 	while (isRunning) {
@@ -65,6 +68,12 @@ void MonitorUtils::monitorUtil() {
 
 		std::cout << "\r" << std::string(30, ' ') << "\r";
 		std::cout << "CPU Usage: " << std::fixed << std::setprecision(1) << systemStatus.cpuUsage << " %" << std::flush << std::endl;
+		
+		std::cout << "\r" << std::string(30, ' ') << "\r";
+		std::cout << "GPU Usage: " << std::fixed << std::setprecision(1) << systemStatus.gpuUsage << " %" << std::flush << std::endl;
+		
+		std::cout << "\r" << std::string(30, ' ') << "\r";
+		std::cout << "Memory Controller Usage: " << std::fixed << std::setprecision(1) << systemStatus.memControllerUsage << " %" << std::flush << std::endl;
 		if (jumpCursor) {
 			restoreCursorPosition();
 		}

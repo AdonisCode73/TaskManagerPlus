@@ -6,13 +6,13 @@ void CpuMonitor::start() {
 	PdhCollectQueryData(cpuQuery);
 
 	isRunning = true;
-	monitorThread = std::thread(&CpuMonitor::monitorLoop, this);
+	cpuThread = std::thread(&CpuMonitor::monitorLoop, this);
 }
 
 void CpuMonitor::stop() {
 	isRunning = false;
-	if (monitorThread.joinable()) {
-		monitorThread.join();
+	if (cpuThread.joinable()) {
+		cpuThread.join();
 	}
 }
 

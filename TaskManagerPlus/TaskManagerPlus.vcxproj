@@ -112,7 +112,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.8\lib\x64;C:\PDCurses-master\wincon;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>pdcurses.lib;kernel32.lib;user32.lib;gdi32.lib;advapi32.lib;pdh.lib;OpenCL.lib</AdditionalDependencies>
+      <AdditionalDependencies>pdcurses.lib;kernel32.lib;user32.lib;gdi32.lib;advapi32.lib;pdh.lib;OpenCL.lib;nvml.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

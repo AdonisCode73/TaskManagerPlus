@@ -12,8 +12,8 @@ class CpuMonitor {
 
 		double getUsage();
 	private:
-		std::thread monitorThread;
-		bool isRunning = false;
+		std::thread cpuThread;
+		bool isRunning;
 
 		PDH_HQUERY cpuQuery;
 		PDH_HCOUNTER cpuTotal;
