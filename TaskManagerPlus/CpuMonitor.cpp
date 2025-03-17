@@ -1,5 +1,4 @@
 #include "CpuMonitor.h"
-#include "MonitorUtils.h"
 
 void CpuMonitor::start() {
 	PdhOpenQuery(NULL, NULL, &cpuQuery);

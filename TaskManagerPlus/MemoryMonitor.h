@@ -2,6 +2,7 @@
 
 #include <windows.h>
 #include <thread>
+#include "MonitorUtils.h"
 
 class MemoryMonitor {
 	public:

@@ -1,5 +1,4 @@
 #include "MemoryMonitor.h"
-#include "MonitorUtils.h"
 
 void MemoryMonitor::start() {
 	update();
@@ -22,15 +21,15 @@ void MemoryMonitor::stop() {
 }
 
 double MemoryMonitor::calculateUtilisation() {
-	return 100 - ((systemStatus.availMemory / systemStatus.totalMemory) * 100); 
+	return 100 - ((systemStatus.ramAvailMemory / systemStatus.ramTotalMemory) * 100); 
 }
 
 void MemoryMonitor::calculateTotal() {
-	systemStatus.totalMemory = memInfo.ullTotalPhys / (1024.0 * 1024.0 * 1024.0);
+	systemStatus.ramTotalMemory = memInfo.ullTotalPhys / (1024.0 * 1024.0 * 1024.0);
 }
 
 void MemoryMonitor::calculateAvail() {
-	systemStatus.availMemory = memInfo.ullAvailPhys / (1024.0 * 1024.0 * 1024.0);
+	systemStatus.ramAvailMemory = memInfo.ullAvailPhys / (1024.0 * 1024.0 * 1024.0);
 }
 
 void MemoryMonitor::monitorLoop() {

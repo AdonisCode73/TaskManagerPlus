@@ -1,15 +1,19 @@
 #include "CpuMonitor.h"
 #include "MemoryMonitor.h"
 #include "MonitorUtils.h"
+#include "GpuMonitor.h"
+
 
 CpuMonitor cpuMonitor;
 MemoryMonitor memoryMonitor;
+GpuMonitor gpuMonitor;
 SystemStatus systemStatus;
 
 
 void MonitorUtils::start() {
 	cpuMonitor.start();
 	memoryMonitor.start();
+	gpuMonitor.start();
 
 	isRunning = true;
 	monitorThread = std::thread(&MonitorUtils::monitorUtil, this);
@@ -46,8 +50,12 @@ void MonitorUtils::restoreCursorPosition() {
 }
 
 void MonitorUtils::monitorUtil() {
-	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.totalMemory << "GB total memory available in your system.\n";
-	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.availMemory << "GB available memory available in your system.\n";
+	std::cout << "RAM:\n";
+	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.ramTotalMemory << "GB total memory available in your system.\n";
+	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.ramAvailMemory << "GB available memory in your system.\n";
+	
+	std::cout << "VRAM:\n";
+	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.vramTotalMemory << "GB total memory available in your system.\n";
 
 	saveCursorPosition();
 

@@ -8,8 +8,10 @@
 struct SystemStatus {
 	std::atomic <double> cpuUsage{ 0.0 };
 	std::atomic <double> memoryUsage{ 0.0 };
-	std::atomic <double> availMemory{ 0.0 };
-	std::atomic <double> totalMemory{ 0.0 };
+	std::atomic <double> ramAvailMemory{ 0.0 };
+	std::atomic <double> ramTotalMemory{ 0.0 };
+	std::atomic <double> vramAvailMemory{ 0.0 };
+	std::atomic <double> vramTotalMemory{ 0.0 };
 };
 extern	SystemStatus systemStatus;
 

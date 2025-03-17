@@ -8,7 +8,6 @@
 int main()
 {
 	MonitorUtils utilMonitor;
-	static std::string exitKey;
 
 	std::cout << "\n**Beginning System Monitoring**\n";
 
