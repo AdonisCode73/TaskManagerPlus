@@ -4,6 +4,7 @@ CpuMonitor cpuMonitor;
 MemoryMonitor memoryMonitor;
 GpuMonitor gpuMonitor;
 DiskMonitor diskMonitor;
+NetworkMonitor networkMonitor;
 
 SystemStatus systemStatus;
 
@@ -13,6 +14,7 @@ void MonitorUtils::start() {
 	memoryMonitor.start();
 	gpuMonitor.start();
 	diskMonitor.start();
+	networkMonitor.start();
 
 	isRunning = true;
 	monitorThread = std::thread(&MonitorUtils::monitorUtil, this);
@@ -31,6 +33,7 @@ void MonitorUtils::stop() {
 	memoryMonitor.stop();
 	gpuMonitor.stop();
 	diskMonitor.stop();
+	networkMonitor.stop();
 	isRunning = false;
 
 	if (monitorThread.joinable()) {
@@ -86,6 +89,12 @@ void MonitorUtils::monitorUtil() {
 		
 		std::cout << "\r" << std::string(30, ' ') << "\r";
 		std::cout << "Disk Utilisation: " << std::fixed << std::setprecision(1) << systemStatus.diskTime << " %" << std::flush << std::endl;
+		
+		std::cout << "\r" << std::string(30, ' ') << "\r";
+		std::cout << "Network Bytes Sent: " << std::fixed << std::setprecision(1) << systemStatus.sendNetwork << "Kbps" << std::flush << std::endl;
+		
+		std::cout << "\r" << std::string(30, ' ') << "\r";
+		std::cout << "Network Bytes Received: " << std::fixed << std::setprecision(1) << systemStatus.receiveNetwork << "Kbps" << std::flush << std::endl;
 		if (jumpCursor) {
 			restoreCursorPosition();
 		}

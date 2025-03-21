@@ -10,6 +10,7 @@
 #include "MemoryMonitor.h"
 #include "GpuMonitor.h"
 #include "DiskMonitor.h"
+#include "NetworkMonitor.h"
 
 struct SystemStatus {
 	std::atomic <double> cpuUsage{ 0.0 };
@@ -28,6 +29,9 @@ struct SystemStatus {
 	std::atomic <double> readDisk{ 0.0 };
 	std::atomic <double> writeDisk{ 0.0 };
 	std::atomic <double> diskTime{ 0.0 };
+	
+	std::atomic <double> sendNetwork{ 0.0 };
+	std::atomic <double> receiveNetwork{ 0.0 };
 };
 extern	SystemStatus systemStatus;
 
