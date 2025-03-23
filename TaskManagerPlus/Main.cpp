@@ -1,10 +1,11 @@
 #include <iostream>
-#include <curses.h>
 #include "MonitorUtils.h"
+#include "GuiController.h"
 
 int main()
 {
 	MonitorUtils utilMonitor;
+	GuiController guiController;
 
 	std::cout << "\n**Beginning System Monitoring**\n";
 
@@ -17,13 +18,5 @@ int main()
 	utilMonitor.stop();
 	std::cout << "\nSafely Exiting application.";
 
-	/*
-	initscr();            // Initialize ncurses mode
-	printw("Hello, ncurses!"); // Print text
-	refresh();            // Update the screen
-	getch();              // Wait for user input
-	printw("I am best C++ Programmer!");
-	getch();
-	clear();
-	endwin();*/
+	guiController.start();
 }
