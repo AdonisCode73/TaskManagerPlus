@@ -27,10 +27,6 @@ void DiskMonitor::update() {
 }
 
 void DiskMonitor::getUsage() {
-	PDH_FMT_COUNTERVALUE readCounterVal;
-	PDH_FMT_COUNTERVALUE writeCounterVal;
-	PDH_FMT_COUNTERVALUE diskTimeCounterVal;
-
 	PdhCollectQueryData(diskQuery);
 	PdhGetFormattedCounterValue(readTotal, PDH_FMT_DOUBLE, NULL, &readCounterVal);
 	PdhGetFormattedCounterValue(writeTotal, PDH_FMT_DOUBLE, NULL, &writeCounterVal);

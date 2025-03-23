@@ -18,35 +18,44 @@ void NetworkMonitor::stop() {
 }
 
 void NetworkMonitor::getNetworkInfo() {
-	if (GetIfTable(nullptr, &ulSize, false) == ERROR_INSUFFICIENT_BUFFER) {
-		pIfTable = (MIB_IFTABLE*)malloc(ulSize);
-		if (pIfTable && GetIfTable(pIfTable, &ulSize, false) == NO_ERROR) {
+	if (GetIfTable(nullptr, &ulSize, false) != ERROR_INSUFFICIENT_BUFFER) {
+		return;
+	}
+	pIfTable = (MIB_IFTABLE*)malloc(ulSize);
 
-			if (!selectedInterfaceIndex) {
-				for (DWORD i = 0; i < pIfTable->dwNumEntries; i++) {
-					tempRow = pIfTable->table[i];
+	if (!pIfTable) {
+		return;
+	}
 
-					if (tempRow.dwOperStatus == IF_OPER_STATUS_OPERATIONAL &&
-						tempRow.dwType != IF_TYPE_SOFTWARE_LOOPBACK &&
-						tempRow.dwSpeed > 0) {
+	if (pIfTable && GetIfTable(pIfTable, &ulSize, false) != NO_ERROR) {
+		free(pIfTable);
+		return;
+	}
 
-						interfaceIndex = tempRow.dwIndex;
-						selectedInterfaceIndex = true;
-						row = tempRow; 
-						break;
-					}
-				}
-			}
-			else {
-				for (DWORD i = 0; i < pIfTable->dwNumEntries; i++) {
-					if (pIfTable->table[i].dwIndex == interfaceIndex) {
-						row = pIfTable->table[i];
-						break;
-					}
-				}
+	if (!selectedInterfaceIndex) {
+		for (DWORD i = 0; i < pIfTable->dwNumEntries; i++) {
+			tempRow = pIfTable->table[i];
+
+			if (tempRow.dwOperStatus == IF_OPER_STATUS_OPERATIONAL &&
+				tempRow.dwType != IF_TYPE_SOFTWARE_LOOPBACK &&
+				tempRow.dwSpeed > 0) {
+
+				interfaceIndex = tempRow.dwIndex;
+				selectedInterfaceIndex = true;
+				row = tempRow;
+				return;
 			}
 		}
 	}
+	else {
+		for (DWORD i = 0; i < pIfTable->dwNumEntries; i++) {
+			if (pIfTable->table[i].dwIndex == interfaceIndex) {
+				row = pIfTable->table[i];
+				return;
+			}
+		}
+	}
+	free(pIfTable);
 }
 
 void NetworkMonitor::monitorLoop() {

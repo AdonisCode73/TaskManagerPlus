@@ -17,6 +17,10 @@ class DiskMonitor {
 		PDH_HCOUNTER writeTotal;
 		PDH_HCOUNTER diskTime;
 
+		PDH_FMT_COUNTERVALUE readCounterVal;
+		PDH_FMT_COUNTERVALUE writeCounterVal;
+		PDH_FMT_COUNTERVALUE diskTimeCounterVal;
+
 		bool isRunning;
 		std::thread diskThread;
 
