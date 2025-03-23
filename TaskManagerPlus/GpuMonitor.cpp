@@ -54,25 +54,38 @@ void GpuMonitor::monitorLoop() {
 	}
 }
 
-/* OPENCL API - MAY REUSE THIS CODE LATER IF DEFINING AMD-GPU FOR GPU MONITORING
+/* OpenCL API - probably redundant now
 void GpuMonitor::start() {
+	initOpenCL();
+
+	isRunning = true;
+	gpuThread = std::thread(&GpuMonitor::monitorLoop, this);
+}
+
+void GpuMonitor::stop() {
+	isRunning = false;
+	if (gpuThread.joinable()) {
+		gpuThread.join();
+	}
+}
+
+void GpuMonitor::initOpenCL() {
 	clGetPlatformIDs(0, nullptr, &platformCount);
-	cl_platform_id* platforms = new cl_platform_id[platformCount];
+	platforms = new cl_platform_id[platformCount];
 
 	clGetPlatformIDs(platformCount, platforms, nullptr);
 	platformID = platforms[0];
 	delete[] platforms;
 
 	clGetDeviceIDs(platformID, CL_DEVICE_TYPE_GPU, 0, nullptr, &num_devices);
-	cl_device_id* deviceIDs = new cl_device_id[num_devices];
+	deviceIDs = new cl_device_id[num_devices];
 
 	clGetDeviceIDs(platformID, CL_DEVICE_TYPE_GPU, num_devices, deviceIDs, nullptr);
 	deviceID = deviceIDs[0];
 	delete[] deviceIDs;
 
 	calculateTotalMem();
-
-	print_data();
+	calculateAvailMem();
 }
 
 void GpuMonitor::calculateTotalMem() {
@@ -81,11 +94,13 @@ void GpuMonitor::calculateTotalMem() {
 }
 
 void GpuMonitor::calculateAvailMem() {
-	//clGetDeviceInfo(deviceID, CL_DEVICE_GLOBAL_FREE_MEMORY_AMD, sizeof(cl_ulong), &free_mem, NULL);
+	clGetDeviceInfo(deviceID, CL_DEVICE_GLOBAL_FREE_MEMORY_AMD, sizeof(cl_ulong), &free_mem, NULL);
 }
 
-void GpuMonitor::print_data() {
-	std::cout << platformID << std::endl;
-	std::cout << deviceID << std::endl;
-	std::cout << num_devices << std::endl;
+void GpuMonitor::monitorLoop() {
+	while (isRunning) {
+		calculateTotalMem();
+		calculateAvailMem();
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
 }*/

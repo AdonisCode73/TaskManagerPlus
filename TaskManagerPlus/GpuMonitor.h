@@ -21,11 +21,14 @@ class GpuMonitor {
 
 		void initNVML();
 
+
 		void monitorLoop();
 
 		void update();
 		
 		/*
+		void initOpenCL();
+		
 		cl_uint platformCount;
 		cl_uint num_devices;
 
@@ -35,6 +38,10 @@ class GpuMonitor {
 		cl_platform_id platformID;
 
 		cl_device_id deviceID;
+
+		cl_platform_id* platforms;
+		cl_device_id* deviceIDs;
+
 		void calculateTotalMem();
 
 		void calculateAvailMem();

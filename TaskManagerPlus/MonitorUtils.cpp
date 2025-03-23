@@ -56,7 +56,7 @@ void MonitorUtils::monitorUtil() {
 	std::cout << "\nRAM:\n";
 	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.ramTotalMemory << "GB total memory available in your system.\n";
 	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.ramAvailMemory << "GB available memory in your system.\n";
-	
+
 	std::cout << "\nVRAM:\n";
 	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.vramTotalMemory << "GB total memory available in your system.\n";
 	std::cout << "You have " << std::fixed << std::setprecision(1) << systemStatus.vramAvailMemory << "GB available memory in your system.\n";
@@ -74,25 +74,25 @@ void MonitorUtils::monitorUtil() {
 
 		std::cout << "\r" << std::string(40, ' ') << "\r";
 		std::cout << "CPU Usage: " << std::fixed << std::setprecision(1) << systemStatus.cpuUsage << " %" << std::flush << std::endl;
-		
+
 		std::cout << "\r" << std::string(40, ' ') << "\r";
 		std::cout << "GPU Usage: " << std::fixed << std::setprecision(1) << systemStatus.gpuUsage << " %" << std::flush << std::endl;
-		
+
 		std::cout << "\r" << std::string(40, ' ') << "\r";
 		std::cout << "Memory Controller Usage: " << std::fixed << std::setprecision(1) << systemStatus.memControllerUsage << " %" << std::flush << std::endl;
-		
+
 		std::cout << "\r" << std::string(40, ' ') << "\r";
 		std::cout << "Disk Read Usage: " << std::fixed << std::setprecision(1) << systemStatus.readDisk << "KB/s" << std::flush << std::endl;
-		
+
 		std::cout << "\r" << std::string(40, ' ') << "\r";
 		std::cout << "Disk Write Usage: " << std::fixed << std::setprecision(1) << systemStatus.writeDisk << "KB/s" << std::flush << std::endl;
-		
+
 		std::cout << "\r" << std::string(40, ' ') << "\r";
 		std::cout << "Disk Utilisation: " << std::fixed << std::setprecision(1) << systemStatus.diskTime << " %" << std::flush << std::endl;
-		
+
 		std::cout << "\r" << std::string(40, ' ') << "\r";
 		std::cout << "Network Bytes Sent: " << std::fixed << std::setprecision(1) << systemStatus.sendNetwork << "Kbps" << std::flush << std::endl;
-		
+
 		std::cout << "\r" << std::string(40, ' ') << "\r";
 		std::cout << "Network Bytes Received: " << std::fixed << std::setprecision(1) << systemStatus.receiveNetwork << "Kbps" << std::flush << std::endl;
 		if (jumpCursor) {
