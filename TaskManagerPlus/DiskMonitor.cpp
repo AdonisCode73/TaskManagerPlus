@@ -44,6 +44,6 @@ void DiskMonitor::getUsage() {
 void DiskMonitor::monitorLoop() {
 	while (isRunning) {
 		getUsage();
-		Sleep(1000);
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }

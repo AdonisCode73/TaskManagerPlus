@@ -1,6 +1,9 @@
 #include "NetworkMonitor.h"
 
 void NetworkMonitor::start() {
+	selectedInterfaceIndex = false;
+	interfaceIndex = 0;
+
 	getNetworkInfo();
 
 	isRunning = true;
@@ -15,24 +18,50 @@ void NetworkMonitor::stop() {
 }
 
 void NetworkMonitor::getNetworkInfo() {
-	if (GetIfTable(nullptr, &ulSize, false) == NO_ERROR) {
+	if (GetIfTable(nullptr, &ulSize, false) == ERROR_INSUFFICIENT_BUFFER) {
 		pIfTable = (MIB_IFTABLE*)malloc(ulSize);
-		if (pIfTable != NULL && GetIfTable(pIfTable, &ulSize, false) == NO_ERROR) {
-			for (DWORD i = 0; i < pIfTable->dwNumEntries; i++) {
-				row = pIfTable->table[i];
+		if (pIfTable && GetIfTable(pIfTable, &ulSize, false) == NO_ERROR) {
+
+			if (!selectedInterfaceIndex) {
+				for (DWORD i = 0; i < pIfTable->dwNumEntries; i++) {
+					tempRow = pIfTable->table[i];
+
+					if (tempRow.dwOperStatus == IF_OPER_STATUS_OPERATIONAL &&
+						tempRow.dwType != IF_TYPE_SOFTWARE_LOOPBACK &&
+						tempRow.dwSpeed > 0) {
+
+						interfaceIndex = tempRow.dwIndex;
+						selectedInterfaceIndex = true;
+						row = tempRow; 
+						break;
+					}
+				}
+			}
+			else {
+				for (DWORD i = 0; i < pIfTable->dwNumEntries; i++) {
+					if (pIfTable->table[i].dwIndex == interfaceIndex) {
+						row = pIfTable->table[i];
+						break;
+					}
+				}
 			}
 		}
 	}
 }
 
 void NetworkMonitor::monitorLoop() {
-	MIB_IFROW prevRow = row;
+	getNetworkInfo();
+	prevRow = row;
+
 	while (isRunning) {
-		DWORD sentBytes = row.dwOutOctets - prevRow.dwOutOctets;
-		DWORD recvBytes = row.dwInOctets - prevRow.dwInOctets;
-		systemStatus.sendNetwork = (double) sentBytes;
-		systemStatus.receiveNetwork = (double) recvBytes;
-		prevRow = row;
 		getNetworkInfo();
+
+		sentBytes = row.dwOutOctets - prevRow.dwOutOctets;
+		recvBytes = row.dwInOctets - prevRow.dwInOctets;
+		systemStatus.sendNetwork = (sentBytes * 8.0) / 1000.0;
+		systemStatus.receiveNetwork = (recvBytes * 8.0) / 1000.0;
+
+		prevRow = row;
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }
