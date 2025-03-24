@@ -1,6 +1,6 @@
 #pragma once
 #include <curses.h>
-#include <iostream>
+#include "MonitorUtils.h";
 
 #define NUM_WINDOWS 6
 
@@ -27,8 +27,17 @@ class GuiController {
 
 		void changeWindow();
 
+		void drawBaseLayout(WINDOW* win, const char* title, const char* footer);
+
+		void drawCPUPage(WINDOW* win);
+		void drawDiskPage(WINDOW* win);
+		void drawGPUPage(WINDOW* win);
+		void drawMemoryPage(WINDOW* win);
+		void drawNetworkPage(WINDOW* win);
+
 		int rows, cols;
 		int screenIdx;
+		int userInput;
 
 		WINDOW* homeW;
 		WINDOW* cpuW;

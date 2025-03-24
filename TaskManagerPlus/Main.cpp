@@ -5,7 +5,6 @@
 int main()
 {
 	MonitorUtils utilMonitor;
-	GuiController guiController;
 
 	std::cout << "\n**Beginning System Monitoring**\n";
 
@@ -17,6 +16,4 @@ int main()
 
 	utilMonitor.stop();
 	std::cout << "\nSafely Exiting application.";
-
-	guiController.start();
 }

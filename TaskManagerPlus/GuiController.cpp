@@ -30,9 +30,8 @@ void GuiController::start() {
 }
 
 void GuiController::navigateWindows() {
-	int ch;
-	while ((ch = getch()) != '\n') {
-		switch (ch) {
+	while ((userInput = getch()) != '\n') {
+		switch (userInput) {
 		case KEY_LEFT:
 			screenIdx = (screenIdx == 0) ? NUM_WINDOWS - 1 : screenIdx - 1;
 			currentScreen = static_cast<Screen>(screenIdx);
@@ -54,42 +53,68 @@ void GuiController::navigateWindows() {
 void GuiController::changeWindow() {
 	switch (currentScreen) {
 	case HOME: {
-		clear();
-		wrefresh(homeW);
-		const char* title = "Task Manager Plus";
-		mvprintw(0, (cols - strlen(title)) / 2, "%s", title);
-
-		const char* middle = "Welcome to my application";
-		mvprintw(rows / 2, (cols - strlen(middle)) / 2, "%s", middle);
-
-		const char* footer = "Press left or right to traverse the screens";
-		mvprintw(rows - 1, (cols - strlen(footer)) / 2, "%s", footer);
-		refresh();
+		drawBaseLayout(homeW, "Task Manager Plus", "Press left or right to traverse the screens");
 		break;
 	}
-	case CPU:
-		clear();
-		wrefresh(cpuW);
+	case CPU: {
+		drawBaseLayout(cpuW, "CPU Monitor", "Press left or right to traverse the screens");
+		drawCPUPage(cpuW);
 		break;
-	case DISK:
-		clear();
-		wrefresh(diskW);
+	}
+	case DISK: {
+		drawBaseLayout(diskW, "Disk Monitor", "Press left or right to traverse the screens");
+		drawDiskPage(diskW);
 		break;
-	case GPU:
-		clear();
-		wrefresh(gpuW);
+	}
+	case GPU: {
+		drawBaseLayout(gpuW, "GPU Monitor", "Press left or right to traverse the screens");
+		drawGPUPage(gpuW);
 		break;
-	case MEMORY:
-		clear();
-		wrefresh(memoryW);
+	}
+	case MEMORY: {
+		drawBaseLayout(memoryW, "Memory Monitor", "Press left or right to traverse the screens");
+		drawMemoryPage(memoryW);
 		break;
-	case NETWORK:
-		clear();
-		wrefresh(networkW);
+	}
+	case NETWORK: {
+		drawBaseLayout(networkW, "Network Monitor", "Press left or right to traverse the screens");
+		drawNetworkPage(networkW);
 		break;
+	}
 	default:
 		break;
 	}
+}
+
+void GuiController::drawBaseLayout(WINDOW* win, const char* title, const char* footer) {
+	clear();
+	wrefresh(win);
+
+	mvprintw(0, (cols - strlen(title)) / 2, "%s", title);
+	mvprintw(rows - 1, (cols - strlen(footer)) / 2, "%s", footer);
+
+	refresh();
+}
+
+void GuiController::drawCPUPage(WINDOW* win) {
+	//const char* cpuStat = "CPU Utilisation: %.2f%%";
+	//mvprintw(5, (cols - strlen(cpuStat)) / 2, "CPU Utilisation: %.2f%%", systemStatus.cpuUsage);
+}
+
+void GuiController::drawDiskPage(WINDOW* win) {
+
+}
+
+void GuiController::drawGPUPage(WINDOW* win) {
+
+}
+
+void GuiController::drawMemoryPage(WINDOW* win) {
+
+}
+
+void GuiController::drawNetworkPage(WINDOW* win) {
+
 }
 
 void GuiController::stop() {

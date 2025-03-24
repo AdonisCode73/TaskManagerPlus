@@ -11,6 +11,7 @@
 #include "GpuMonitor.h"
 #include "DiskMonitor.h"
 #include "NetworkMonitor.h"
+#include "GuiController.h"
 
 struct SystemStatus {
 	std::atomic <double> cpuUsage{ 0.0 };

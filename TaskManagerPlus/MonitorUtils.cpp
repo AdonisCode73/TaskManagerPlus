@@ -5,6 +5,7 @@ MemoryMonitor memoryMonitor;
 GpuMonitor gpuMonitor;
 DiskMonitor diskMonitor;
 NetworkMonitor networkMonitor;
+GuiController guiController;
 
 SystemStatus systemStatus;
 
@@ -15,6 +16,7 @@ void MonitorUtils::start() {
 	gpuMonitor.start();
 	diskMonitor.start();
 	networkMonitor.start();
+	guiController.start();
 
 	isRunning = true;
 	monitorThread = std::thread(&MonitorUtils::monitorUtil, this);
@@ -29,6 +31,7 @@ bool MonitorUtils::isRunningCheck() {
 }
 
 void MonitorUtils::stop() {
+	guiController.stop();
 	cpuMonitor.stop();
 	memoryMonitor.stop();
 	gpuMonitor.stop();
