@@ -31,7 +31,6 @@ bool MonitorUtils::isRunningCheck() {
 }
 
 void MonitorUtils::stop() {
-	guiController.stop();
 	cpuMonitor.stop();
 	memoryMonitor.stop();
 	gpuMonitor.stop();

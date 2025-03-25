@@ -24,12 +24,16 @@ void GuiController::guiInit() {
 void GuiController::start() {
 	guiInit();
 
-	navigateWindows();
+	isRunning = true;
+	guiThread = std::thread(&GuiController::updatePage, this);
 
+	navigateWindows();
+	
 	stop();
 }
 
 void GuiController::navigateWindows() {
+	changeWindow();
 	while ((userInput = getch()) != '\n') {
 		switch (userInput) {
 		case KEY_LEFT:
@@ -86,6 +90,14 @@ void GuiController::changeWindow() {
 	}
 }
 
+void GuiController::updatePage() {
+	while (isRunning) {
+		changeWindow();
+		refresh();
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
+}
+
 void GuiController::drawBaseLayout(WINDOW* win, const char* title, const char* footer) {
 	clear();
 	wrefresh(win);
@@ -97,8 +109,11 @@ void GuiController::drawBaseLayout(WINDOW* win, const char* title, const char* f
 }
 
 void GuiController::drawCPUPage(WINDOW* win) {
-	//const char* cpuStat = "CPU Utilisation: %.2f%%";
-	//mvprintw(5, (cols - strlen(cpuStat)) / 2, "CPU Utilisation: %.2f%%", systemStatus.cpuUsage);
+	const char* cpuStatHeader = "CPU Statistics";
+	const char* cpuStat = "CPU Utilisation: %.2f%%";
+	mvprintw((rows / 2) - 2,  2, "%s", cpuStatHeader);
+	mvprintw((rows / 2) - 1,  2, "%s", underline);
+	mvprintw((rows / 2),  2, "CPU Utilisation: %.2f%%", systemStatus.cpuUsage.load());
 }
 
 void GuiController::drawDiskPage(WINDOW* win) {
@@ -118,5 +133,9 @@ void GuiController::drawNetworkPage(WINDOW* win) {
 }
 
 void GuiController::stop() {
+	isRunning = false;
+	if (guiThread.joinable()) {
+		guiThread.join();
+	}
 	endwin();
 }

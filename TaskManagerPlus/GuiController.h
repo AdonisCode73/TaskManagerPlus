@@ -35,9 +35,17 @@ class GuiController {
 		void drawMemoryPage(WINDOW* win);
 		void drawNetworkPage(WINDOW* win);
 
+		void updatePage();
+
+		bool isRunning;
+
 		int rows, cols;
 		int screenIdx;
 		int userInput;
+
+		const char* underline = "- - -";
+
+		std::thread guiThread;
 
 		WINDOW* homeW;
 		WINDOW* cpuW;
