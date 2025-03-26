@@ -1,5 +1,6 @@
 #pragma once
 #include <curses.h>
+#include <map>
 #include "MonitorUtils.h";
 
 #define NUM_WINDOWS 6
@@ -29,13 +30,20 @@ class GuiController {
 
 		void drawBaseLayout(WINDOW* win, const char* title, const char* footer);
 
+		void drawGraphBox(WINDOW* parent, int startY, int startX, int height, int width, const char* title);
+
 		void drawCPUPage(WINDOW* win);
 		void drawDiskPage(WINDOW* win);
 		void drawGPUPage(WINDOW* win);
 		void drawMemoryPage(WINDOW* win);
 		void drawNetworkPage(WINDOW* win);
 
+		void renderCPUGraph(WINDOW* win);
+
 		void updatePage();
+
+		std::map<WINDOW*, bool> firstRun;
+		std::map<WINDOW*, WINDOW*> windowGraphBox;
 
 		bool isRunning;
 
