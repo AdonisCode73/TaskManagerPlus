@@ -43,8 +43,6 @@ class GuiController {
 		int screenIdx;
 		int userInput;
 
-		const char* underline = "- - -";
-
 		std::thread guiThread;
 
 		WINDOW* homeW;
