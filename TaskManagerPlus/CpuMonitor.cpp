@@ -26,7 +26,9 @@ double CpuMonitor::getUsage() {
 
 void CpuMonitor::monitorLoop() {
 	while (isRunning) {
-		systemStatus.cpuUsage = getUsage();
+		/*std::lock_guard<std::mutex> lock(systemStatus.cpuMutex);*/
+		MonitorUtils::checkQueueSize(systemStatus.cpuUsage);
+		systemStatus.cpuUsage.push(getUsage());
 		Sleep(1000);
 	}
 }

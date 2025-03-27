@@ -38,11 +38,10 @@ class GuiController {
 		void drawMemoryPage(WINDOW* win);
 		void drawNetworkPage(WINDOW* win);
 
-		void renderCPUGraph(WINDOW* win);
+		void renderCPUGraph(WINDOW* win, int height, int width);
 
 		void updatePage();
 
-		std::map<WINDOW*, bool> firstRun;
 		std::map<WINDOW*, WINDOW*> windowGraphBox;
 
 		bool isRunning;

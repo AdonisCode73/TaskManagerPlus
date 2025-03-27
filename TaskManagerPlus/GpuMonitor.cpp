@@ -44,7 +44,9 @@ void GpuMonitor::update() {
 
 	systemStatus.vramAvailMemory = memInfo.free / (1024.0 * 1024.0 * 1024.0);
 	systemStatus.vramTotalMemory = memInfo.total / (1024.0 * 1024.0 * 1024.0);
-	systemStatus.gpuUsage = utilization.gpu;  
+	/*std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);*/
+	MonitorUtils::checkQueueSize(systemStatus.gpuUsage);
+	systemStatus.gpuUsage.push(utilization.gpu);
 	systemStatus.memControllerUsage = utilization.memory;
 }
 

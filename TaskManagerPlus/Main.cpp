@@ -1,6 +1,4 @@
-#include <iostream>
 #include "MonitorUtils.h"
-#include "GuiController.h"
 
 int main()
 {
