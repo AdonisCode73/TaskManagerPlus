@@ -39,6 +39,10 @@ class GuiController {
 		void drawNetworkPage(WINDOW* win);
 
 		void renderCPUGraph(WINDOW* win, int height, int width);
+		void renderDiskGraph(WINDOW* win, int height, int width);
+		void renderGPUGraph(WINDOW* win, int height, int width);
+		void renderMemoryGraph(WINDOW* win, int height, int width);
+		void renderNetworkGraph(WINDOW* win, int height, int width);
 
 		void updatePage();
 

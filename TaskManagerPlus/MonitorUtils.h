@@ -12,21 +12,21 @@
 #include "DiskMonitor.h"
 #include "NetworkMonitor.h"
 #include "GuiController.h"
-#include <queue>
+#include <deque>
 
 #define MAX_QUEUE_SIZE 73
 struct SystemStatus {
-	std::queue <double> cpuUsage;
+	std::deque <double> cpuUsage;
 	/*std::mutex cpuMutex;*/
 
-	std::queue <double> memoryUsage;
+	std::deque <double> memoryUsage;
 	/*std::mutex memoryMutex;*/
 	std::atomic <double> ramAvailMemory{ 0.0 };
 	std::atomic <double> ramTotalMemory{ 0.0 };
 
 	std::atomic <double> vramAvailMemory{ 0.0 };
 	std::atomic <double> vramTotalMemory{ 0.0 };
-	std::queue <double> gpuUsage;
+	std::deque <double> gpuUsage;
 	/*std::mutex gpuMutex;*/
 	std::atomic <double> memControllerUsage{ 0.0 };
 	
@@ -34,7 +34,7 @@ struct SystemStatus {
 	std::atomic <double> availDisk{ 0.0 };
 	std::atomic <double> readDisk{ 0.0 };
 	std::atomic <double> writeDisk{ 0.0 };
-	std::queue <double> diskTime;
+	std::deque <double> diskTime;
 	/*std::mutex diskMutex;*/
 	
 	std::atomic <double> sendNetwork{ 0.0 };
@@ -50,7 +50,7 @@ class MonitorUtils {
 
 		bool isRunningCheck();
 
-		static void checkQueueSize(std::queue <double>);
+		static void checkQueueSize(std::deque <double>);
 
 	private:
 		COORD initialCursorPos;

@@ -63,7 +63,6 @@ void GuiController::changeWindow() {
 	case CPU: {
 		drawBaseLayout(cpuW, "CPU Monitor", "Press left or right to traverse the screens");
 		drawCPUPage(cpuW);
-		//renderCPUGraph(windowGraphBox[cpuW]);
 		break;
 	}
 	case DISK: {
@@ -117,7 +116,7 @@ void GuiController::drawCPUPage(WINDOW* win) {
 	mvwprintw(win, (rows / 2) - 2, 2, "%s", header);
 	if (!systemStatus.cpuUsage.empty()) {
 		/*std::lock_guard<std::mutex> lock(systemStatus.cpuMutex);*/
-		mvwprintw(win, (rows / 2), 2, "CPU Utilisation: %.2f%%", systemStatus.cpuUsage.back());
+		mvwprintw(win, (rows / 2), 2, "CPU Utilisation: %.2f%%", systemStatus.cpuUsage.front());
 	}
 	wrefresh(win);
 }
@@ -131,7 +130,7 @@ void GuiController::drawDiskPage(WINDOW* win) {
 	mvwprintw(win, (rows / 2) + 1, 2, "Read Speed: %.2f KB/s", systemStatus.readDisk.load());
 	if (!systemStatus.diskTime.empty()) {
 		/*std::lock_guard<std::mutex> lock(systemStatus.diskMutex);*/
-		mvwprintw(win, (rows / 2) + 2, 2, "Disk Utilisation: %.2f%%", systemStatus.diskTime.back());
+		mvwprintw(win, (rows / 2) + 2, 2, "Disk Utilisation: %.2f%%", systemStatus.diskTime.front());
 	}
 
 	mvwprintw(win, (rows / 2) + 4, 2, "Total Space: %.2f GB", systemStatus.totalDisk.load());
@@ -147,7 +146,7 @@ void GuiController::drawGPUPage(WINDOW* win) {
 
 	if (!systemStatus.gpuUsage.empty()) {
 		/*std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);*/
-		mvwprintw(win, (rows / 2), 2, "GPU Usage: %.2f%%", systemStatus.gpuUsage.back());
+		mvwprintw(win, (rows / 2), 2, "GPU Usage: %.2f%%", systemStatus.gpuUsage.front());
 	}
 	mvwprintw(win, (rows / 2) + 1, 2, "Memory Controller Usage: %.2f%%", systemStatus.memControllerUsage.load());
 
@@ -164,7 +163,7 @@ void GuiController::drawMemoryPage(WINDOW* win) {
 
 	if (!systemStatus.memoryUsage.empty()) {
 		/*std::lock_guard<std::mutex> lock(systemStatus.memoryMutex);*/
-		mvwprintw(win, (rows / 2), 2, "RAM Usage: %.2f%%", systemStatus.memoryUsage.back());
+		mvwprintw(win, (rows / 2), 2, "RAM Usage: %.2f%%", systemStatus.memoryUsage.front());
 	}
 
 	mvwprintw(win, (rows / 2) + 2, 2, "Total RAM: %.2f GB", systemStatus.ramTotalMemory.load());
@@ -197,26 +196,22 @@ void GuiController::drawGraphBox(WINDOW* win, int startY, int startX, int height
 		renderCPUGraph(windowGraphBox[win], height, width);
 		break;
 	}
-			// 	case DISK: {
-			// 		drawBaseLayout(diskW, "Disk Monitor", "Press left or right to traverse the screens");
-			// 		drawDiskPage(diskW);
-			// 		break;
-			// 	}
-			// 	case GPU: {
-			// 		drawBaseLayout(gpuW, "GPU Monitor", "Press left or right to traverse the screens");
-			// 		drawGPUPage(gpuW);
-			// 		break;
-			// 	}
-			// 	case MEMORY: {
-			// 		drawBaseLayout(memoryW, "Memory Monitor", "Press left or right to traverse the screens");
-			// 		drawMemoryPage(memoryW);
-			// 		break;
-			// 	}
-			// 	case NETWORK: {
-			// 		drawBaseLayout(networkW, "Network Monitor", "Press left or right to traverse the screens");
-			// 		drawNetworkPage(networkW);
-			// 		break;
-			// 	}
+	case DISK: {
+		renderDiskGraph(windowGraphBox[win], height, width);
+		break;
+	}
+	case GPU: {
+		renderGPUGraph(windowGraphBox[win], height, width);
+		break;
+	}
+	case MEMORY: {
+		renderMemoryGraph(windowGraphBox[win], height, width);
+		break;
+	}
+	case NETWORK: {
+		renderNetworkGraph(windowGraphBox[win], height, width);
+		break;
+	}
 	default:
 		break;
 	}
@@ -225,12 +220,62 @@ void GuiController::drawGraphBox(WINDOW* win, int startY, int startX, int height
 
 	mvwprintw(graphBox, 0, (width - strlen(title)) / 2, "%s", title);
 
+	mvwprintw(win, startY, startX - 5, "100%%");
+	
+	mvwprintw(win, startY + (height / 4), startX - 5, "75%%");
+
+	mvwprintw(win, startY + (height / 2), startX - 5, "50%%");
+	
+	mvwprintw(win, (startY + height) - (height / 4), startX - 5, "25%%");
+
+	mvwprintw(win, startY + height - 1, startX - 5, "0%%");
+
 	wrefresh(graphBox);
 }
 
 void GuiController::renderCPUGraph(WINDOW* win, int height, int width) {
 	werase(win);
-	mvwprintw(win, height / 2, (width - strlen("Hello Graph Box")) / 2, "Hello Graph Box");
+	for (int i = 1; i < systemStatus.cpuUsage.size(); i++) {
+		double currCpuUtil = std::round(systemStatus.cpuUsage[i - 1] / 5);
+		for (int j = 0; j < currCpuUtil; j++) {
+			mvwprintw(win, height - j - 1, 0 + i, "#");
+		}
+	}
+}
+
+void GuiController::renderDiskGraph(WINDOW* win, int height, int width) {
+	werase(win);
+	for (int i = 1; i < systemStatus.diskTime.size(); i++) {
+		double currDiskUtil = std::round(systemStatus.diskTime[i - 1] / 5);
+		for (int j = 0; j < currDiskUtil; j++) {
+			mvwprintw(win, height - j - 1, 0 + i, "#");
+		}
+	}
+}
+
+void GuiController::renderGPUGraph(WINDOW* win, int height, int width) {
+	werase(win);
+	for (int i = 1; i < systemStatus.gpuUsage.size(); i++) {
+		double currGpuUtil = std::round(systemStatus.gpuUsage[i - 1] / 5);
+		for (int j = 0; j < currGpuUtil; j++) {
+			mvwprintw(win, height - j - 1, 0 + i, "#");
+		}
+	}
+}
+
+void GuiController::renderMemoryGraph(WINDOW* win, int height, int width) {
+	werase(win);
+	for (int i = 1; i < systemStatus.memoryUsage.size(); i++) {
+		double currMemoryUtil = std::round(systemStatus.memoryUsage[i - 1] / 5);
+		for (int j = 0; j < currMemoryUtil; j++) {
+			mvwprintw(win, height - j - 1, 0 + i, "#");
+		}
+	}
+}
+
+void GuiController::renderNetworkGraph(WINDOW* win, int height, int width) {
+	werase(win);
+	mvwprintw(win, height / 2, (width - strlen("N/A For Now")) / 2, "N/A For Now");
 }
 
 void GuiController::stop() {

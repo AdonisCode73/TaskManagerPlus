@@ -36,7 +36,7 @@ void DiskMonitor::getUsage() {
 	systemStatus.writeDisk = writeCounterVal.doubleValue / 1024.0;
 	/*std::lock_guard<std::mutex> lock(systemStatus.diskMutex);*/
 	MonitorUtils::checkQueueSize(systemStatus.diskTime);
-	systemStatus.diskTime.push(diskTimeCounterVal.doubleValue);
+	systemStatus.diskTime.push_front(diskTimeCounterVal.doubleValue);
 }
 
 void DiskMonitor::monitorLoop() {

@@ -37,7 +37,7 @@ void MemoryMonitor::monitorLoop() {
 		update();
 		/*std::lock_guard<std::mutex> lock(systemStatus.memoryMutex);*/
 		MonitorUtils::checkQueueSize(systemStatus.memoryUsage);
-		systemStatus.memoryUsage.push(calculateUtilisation());
+		systemStatus.memoryUsage.push_front(calculateUtilisation());
 		Sleep(1000);
 	}
 }

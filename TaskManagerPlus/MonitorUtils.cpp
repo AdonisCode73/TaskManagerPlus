@@ -43,9 +43,9 @@ void MonitorUtils::stop() {
 	}
 }
 
-void MonitorUtils::checkQueueSize(std::queue <double> statQueue) {
+void MonitorUtils::checkQueueSize(std::deque <double> statQueue) {
 	if (statQueue.size() == MAX_QUEUE_SIZE) {
-		statQueue.pop();
+		statQueue.pop_back();
 	}
 }
 
