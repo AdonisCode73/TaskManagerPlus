@@ -25,6 +25,12 @@
     <ClCompile Include="GuiController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Desktop\ADLX-main\ADLX-main\SDK\ADLXHelper\Windows\Cpp\ADLXHelper.cpp">
+      <Filter>ADLX Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Desktop\ADLX-main\ADLX-main\SDK\Platform\Windows\WinAPIs.cpp">
+      <Filter>ADLX Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MemoryMonitor.h">
@@ -55,6 +61,9 @@
     </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{6d996452-f557-4e20-b9b7-a2a8e5cc8c9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ADLX Files">
+      <UniqueIdentifier>{e2d0020f-21b6-4540-b86f-895a9cbaca55}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

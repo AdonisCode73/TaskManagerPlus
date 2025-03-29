@@ -1,7 +1,10 @@
 #pragma once
 #include "MonitorUtils.h"
-//#include "CL/cl.h"
-#include "nvml.h"
+#include "CL/cl.h"
+//#include "nvml.h"
+#include "ADLXHelper.h"
+#include "IPerformanceMonitoring.h"
+#include "IPerformanceMonitoring2.h"
 
 class GpuMonitor {
 
@@ -11,22 +14,38 @@ class GpuMonitor {
 		void stop();
 
 	private:
-		nvmlDevice_t device;
-		nvmlReturn_t result;
-		nvmlMemory_t memInfo;
-		nvmlUtilization_t utilization;
+		ADLXHelper adlxHelper;
+		adlx::IADLXSystem* system;
+
+		IADLXGPUMetricsPtr gpuMetrics;
+		IADLXGPUMetricsSupportPtr gpuMetricsSupport;
+
+		adlx_double gpuUsage;
+		adlx_int usedVram;
+		adlx_int vramClockSpeed;
+		adlx_double gpuTemp;
+		adlx_int fanSpeed;
+
+		IADLXPerformanceMonitoringServicesPtr perfMonitoringService;
+		IADLXGPUPtr oneGPU;
+
+// 		nvmlDevice_t device;
+// 		nvmlReturn_t result;
+// 		nvmlMemory_t memInfo;
+// 		nvmlUtilization_t utilization;
 
 		bool isRunning;
 		std::thread gpuThread;
 
-		void initNVML();
+		/*void initNVML();*/
 
+		void initADLX();
 
 		void monitorLoop();
 
 		void update();
 		
-		/*
+		
 		void initOpenCL();
 		
 		cl_uint platformCount;
@@ -44,6 +63,6 @@ class GpuMonitor {
 
 		void calculateTotalMem();
 
-		void calculateAvailMem();
-		*/
+		//void calculateAvailMem();
+		
 };

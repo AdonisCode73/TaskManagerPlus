@@ -148,10 +148,11 @@ void GuiController::drawGPUPage(WINDOW* win) {
 		/*std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);*/
 		mvwprintw(win, (rows / 2), 2, "GPU Usage: %.2f%%", systemStatus.gpuUsage.front());
 	}
-	mvwprintw(win, (rows / 2) + 1, 2, "Memory Controller Usage: %.2f%%", systemStatus.memControllerUsage.load());
+	mvwprintw(win, (rows / 2) + 1, 2, "GPU Temperature: %.1f%°c", systemStatus.gpuTemperature.load());
 
 	mvwprintw(win, (rows / 2) + 3, 2, "Total VRAM: %.2f GB", systemStatus.vramTotalMemory.load());
 	mvwprintw(win, (rows / 2) + 4, 2, "Available VRAM: %.2f GB", systemStatus.vramAvailMemory.load());
+	mvwprintw(win, (rows / 2) + 5, 2, "VRAM Clock Speed: %.2f Mhz", systemStatus.vramClockSpeed.load());
 
 	wrefresh(win);
 }
