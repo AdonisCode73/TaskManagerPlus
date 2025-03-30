@@ -21,9 +21,8 @@ void MonitorUtils::start() {
 
 bool MonitorUtils::isRunningCheck() {
 	if (std::cin.get() == '\n') {
-		return true;
+		return false;
 	}
-	return false;
 }
 
 void MonitorUtils::stop() {
