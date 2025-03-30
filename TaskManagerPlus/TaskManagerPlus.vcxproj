@@ -123,14 +123,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.8\include;C:\Users\Adam\x86_64-14.2.0-release-posix-seh-ucrt-rt_v12-rev0\mingw64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\ADLX;$(ProjectDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>pdcurses.lib;kernel32.lib;user32.lib;gdi32.lib;advapi32.lib;pdh.lib;OpenCL.lib</AdditionalDependencies>
+      <AdditionalDependencies>pdcurses.lib;kernel32.lib;user32.lib;gdi32.lib;advapi32.lib;pdh.lib;OpenCL.lib;iphlpapi.lib;dxgi.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.8\lib\x64;C:\PDCurses-master\wincon;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
