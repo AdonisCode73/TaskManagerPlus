@@ -1,4 +1,4 @@
-#include "GuiController.h"
+﻿#include "GuiController.h"
 
 void GuiController::guiInit() {
 	initscr();
@@ -17,6 +17,13 @@ void GuiController::guiInit() {
 
 	currentScreen = HOME;
 	screenIdx = 0;
+
+	start_color();
+	init_pair(1, COLOR_GREEN, COLOR_BLACK);
+	init_pair(2, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
+	init_pair(4, COLOR_CYAN, COLOR_BLACK);
+	init_pair(5, COLOR_RED, COLOR_BLACK);
 
 	clear();
 }
@@ -148,11 +155,11 @@ void GuiController::drawGPUPage(WINDOW* win) {
 		/*std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);*/
 		mvwprintw(win, (rows / 2), 2, "GPU Usage: %.2f%%", systemStatus.gpuUsage.front());
 	}
-	mvwprintw(win, (rows / 2) + 1, 2, "GPU Temperature: %.1f%�c", systemStatus.gpuTemperature.load());
+	mvwprintw(win, (rows / 2) + 1, 2, "GPU Temperature: %.1f%°c", systemStatus.gpuTemperature.load());
 
 	mvwprintw(win, (rows / 2) + 3, 2, "Total VRAM: %.2f GB", systemStatus.vramTotalMemory.load());
 	mvwprintw(win, (rows / 2) + 4, 2, "Available VRAM: %.2f GB", systemStatus.vramAvailMemory.load());
-	mvwprintw(win, (rows / 2) + 5, 2, "VRAM Clock Speed: %.2f Mhz", systemStatus.vramClockSpeed.load());
+	mvwprintw(win, (rows / 2) + 5, 2, "GPU Clock Speed: %.2f Mhz", systemStatus.gpuClockSpeed.load());
 
 	wrefresh(win);
 }
@@ -176,9 +183,10 @@ void GuiController::drawNetworkPage(WINDOW* win) {
 	const char* header = "Network Utilisation";
 
 	mvwprintw(win, (rows / 2) - 2, 2, "%s", header);
+	mvwprintw(win, (rows / 2), 2, "Network Usage: %.2f%%", systemStatus.networkUsage.front());
 
-	mvwprintw(win, (rows / 2), 2, "Network Bytes Sent: %.2f Kbps", systemStatus.sendNetwork.load());
-	mvwprintw(win, (rows / 2) + 1, 2, "Network Bytes Received: %.2f Kbps", systemStatus.receiveNetwork.load());
+	mvwprintw(win, (rows / 2) + 2, 2, "Network Bytes Sent: %.2f Kbps", systemStatus.sendNetwork.load());
+	mvwprintw(win, (rows / 2) + 3, 2, "Network Bytes Received: %.2f Kbps", systemStatus.receiveNetwork.load());
 
 	wrefresh(win);
 }
@@ -236,47 +244,77 @@ void GuiController::drawGraphBox(WINDOW* win, int startY, int startX, int height
 
 void GuiController::renderCPUGraph(WINDOW* win, int height, int width) {
 	werase(win);
+
+	wattron(win, COLOR_PAIR(1));
+
 	for (int i = 1; i < systemStatus.cpuUsage.size(); i++) {
 		double currCpuUtil = std::round(systemStatus.cpuUsage[i - 1] / 5);
 		for (int j = 0; j < currCpuUtil; j++) {
-			mvwprintw(win, height - j - 1, 0 + i, "#");
+			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
 		}
 	}
+
+	wattroff(win, COLOR_PAIR(1));
 }
 
 void GuiController::renderDiskGraph(WINDOW* win, int height, int width) {
 	werase(win);
+
+	wattron(win, COLOR_PAIR(2));
+
 	for (int i = 1; i < systemStatus.diskTime.size(); i++) {
 		double currDiskUtil = std::round(systemStatus.diskTime[i - 1] / 5);
 		for (int j = 0; j < currDiskUtil; j++) {
-			mvwprintw(win, height - j - 1, 0 + i, "#");
+			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
 		}
 	}
+
+	wattroff(win, COLOR_PAIR(2));
 }
 
 void GuiController::renderGPUGraph(WINDOW* win, int height, int width) {
 	werase(win);
+
+	wattron(win, COLOR_PAIR(3));
+
 	for (int i = 1; i < systemStatus.gpuUsage.size(); i++) {
 		double currGpuUtil = std::round(systemStatus.gpuUsage[i - 1] / 5);
 		for (int j = 0; j < currGpuUtil; j++) {
-			mvwprintw(win, height - j - 1, 0 + i, "#");
+			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
 		}
 	}
+
+	wattroff(win, COLOR_PAIR(3));
 }
 
 void GuiController::renderMemoryGraph(WINDOW* win, int height, int width) {
 	werase(win);
+
+	wattron(win, COLOR_PAIR(4));
+
 	for (int i = 1; i < systemStatus.memoryUsage.size(); i++) {
 		double currMemoryUtil = std::round(systemStatus.memoryUsage[i - 1] / 5);
 		for (int j = 0; j < currMemoryUtil; j++) {
-			mvwprintw(win, height - j - 1, 0 + i, "#");
+			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
 		}
 	}
+
+	wattroff(win, COLOR_PAIR(4));
 }
 
 void GuiController::renderNetworkGraph(WINDOW* win, int height, int width) {
 	werase(win);
-	mvwprintw(win, height / 2, (width - strlen("N/A For Now")) / 2, "N/A For Now");
+
+	wattron(win, COLOR_PAIR(5));
+
+	for (int i = 1; i < systemStatus.networkUsage.size(); i++) {
+		double currNetworkUtil = std::round(systemStatus.networkUsage[i - 1] / 5);
+		for (int j = 0; j < currNetworkUtil; j++) {
+			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
+		}
+	}
+
+	wattroff(win, COLOR_PAIR(5));
 }
 
 void GuiController::stop() {

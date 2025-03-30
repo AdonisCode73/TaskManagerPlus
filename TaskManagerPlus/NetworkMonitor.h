@@ -18,6 +18,8 @@ class NetworkMonitor {
 		DWORD interfaceIndex;
 		bool selectedInterfaceIndex;
 
+		double networkUtil;
+
 		DWORD sentBytes;
 		DWORD recvBytes;
 

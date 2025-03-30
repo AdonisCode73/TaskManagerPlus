@@ -70,6 +70,10 @@ void NetworkMonitor::monitorLoop() {
 		systemStatus.sendNetwork = (sentBytes * 8.0) / 1000.0;
 		systemStatus.receiveNetwork = (recvBytes * 8.0) / 1000.0;
 
+		networkUtil = (((sentBytes + recvBytes) * 8.0) / (double) row.dwSpeed);
+		MonitorUtils::checkQueueSize(systemStatus.networkUsage);
+		systemStatus.networkUsage.push_front(networkUtil * 100.0);
+
 		prevRow = row;
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}

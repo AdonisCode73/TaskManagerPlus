@@ -52,8 +52,8 @@ void GpuMonitor::update() {
 	gpuMetrics->GPUVRAM(&usedVram);
 	systemStatus.vramAvailMemory = (double) (systemStatus.vramTotalMemory - (usedVram / 1024.0));
 
-	gpuMetrics->GPUVRAMClockSpeed(&vramClockSpeed);
-	systemStatus.vramClockSpeed = (double) vramClockSpeed;
+	gpuMetrics->GPUClockSpeed(&gpuClockSpeed);
+	systemStatus.gpuClockSpeed = (double) gpuClockSpeed;
 
 	gpuMetrics->GPUTemperature(&gpuTemp);
 	systemStatus.gpuTemperature = (double) gpuTemp;

@@ -22,7 +22,7 @@ class GpuMonitor {
 
 		adlx_double gpuUsage;
 		adlx_int usedVram;
-		adlx_int vramClockSpeed;
+		adlx_int gpuClockSpeed;
 		adlx_double gpuTemp;
 		adlx_int fanSpeed;
 
