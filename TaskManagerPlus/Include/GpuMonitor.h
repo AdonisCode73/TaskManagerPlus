@@ -17,7 +17,6 @@ class GpuMonitor {
 
 	private:
 		ADLXHelper adlxHelper;
-		adlx::IADLXSystem* system;
 
 		IADLXGPUMetricsPtr gpuMetrics;
 		IADLXGPUMetricsSupportPtr gpuMetricsSupport;

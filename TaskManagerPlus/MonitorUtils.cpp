@@ -17,17 +17,13 @@ void MonitorUtils::start() {
 	diskMonitor.start();
 	networkMonitor.start();
 	guiController.start();
-
-	//isRunning = true;
-	//monitorThread = std::thread(&MonitorUtils::monitorUtil, this);
 }
 
 bool MonitorUtils::isRunningCheck() {
 	if (std::cin.get() == '\n') {
-		jumpCursor = false;
-		return jumpCursor;
+		return true;
 	}
-	return jumpCursor;
+	return false;
 }
 
 void MonitorUtils::stop() {
@@ -36,7 +32,6 @@ void MonitorUtils::stop() {
 	gpuMonitor.stop();
 	diskMonitor.stop();
 	networkMonitor.stop();
-	isRunning = false;
 
 	if (monitorThread.joinable()) {
 		monitorThread.join();

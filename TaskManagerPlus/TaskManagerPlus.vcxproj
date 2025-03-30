@@ -105,7 +105,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.8\include;C:\Users\Adam\x86_64-14.2.0-release-posix-seh-ucrt-rt_v12-rev0\mingw64\include;C:\Users\Adam\Desktop\ADLX-main\ADLX-main\SDK\Include;C:\Users\Adam\Desktop\ADLX-main\ADLX-main\SDK\ADLXHelper\Windows\Cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\ADLX;$(ProjectDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -149,13 +149,13 @@
     <ClCompile Include="NetworkMonitor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CpuMonitor.h" />
-    <ClInclude Include="DiskMonitor.h" />
-    <ClInclude Include="GpuMonitor.h" />
-    <ClInclude Include="GuiController.h" />
-    <ClInclude Include="MemoryMonitor.h" />
-    <ClInclude Include="MonitorUtils.h" />
-    <ClInclude Include="NetworkMonitor.h" />
+    <ClInclude Include="Include\CpuMonitor.h" />
+    <ClInclude Include="Include\DiskMonitor.h" />
+    <ClInclude Include="Include\GpuMonitor.h" />
+    <ClInclude Include="Include\GuiController.h" />
+    <ClInclude Include="Include\MemoryMonitor.h" />
+    <ClInclude Include="Include\MonitorUtils.h" />
+    <ClInclude Include="Include\NetworkMonitor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
