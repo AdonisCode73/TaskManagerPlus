@@ -2,6 +2,7 @@
 
 void GpuMonitor::start() {
 	initOpenCL();
+
 	initADLX();
 	update();
 
@@ -72,21 +73,6 @@ void GpuMonitor::monitorLoop() {
 		Sleep(1000);
 	}
 }
-
-// 	IADLXGPUList* gpus = nullptr;
-// 	system->GetGPUs(&gpus);
-// 
-// 	IADLXGPU* gpu = nullptr;
-// 	gpus->At(0, &gpu); // First GPU
-// 
-// 	IADLXPerformanceMonitoringServices* perf = nullptr;
-// 	system->GetPerformanceMonitoringServices(&perf);
-// 
-// 	IADLXGPUMetricsPtr* utilization = nullptr;
-// 	perf->GetCurrentGPUMetrics(gpu, &utilization);
-// 
-// 	adlx_int usage = 0;
-// 	utilization->GPUUsage(&usage);
 
 // void GpuMonitor::start() {
 // 	initNVML();

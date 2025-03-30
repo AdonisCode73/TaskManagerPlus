@@ -6,6 +6,8 @@
 #include "IPerformanceMonitoring.h"
 #include "IPerformanceMonitoring2.h"
 
+
+
 class GpuMonitor {
 
 	public:
@@ -37,7 +39,7 @@ class GpuMonitor {
 		bool isRunning;
 		std::thread gpuThread;
 
-		/*void initNVML();*/
+		//void initNVML();
 
 		void initADLX();
 

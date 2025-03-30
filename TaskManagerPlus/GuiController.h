@@ -32,6 +32,7 @@ class GuiController {
 
 		void drawGraphBox(WINDOW* parent, int startY, int startX, int height, int width, const char* title);
 
+		void drawHomePage(WINDOW* win);
 		void drawCPUPage(WINDOW* win);
 		void drawDiskPage(WINDOW* win);
 		void drawGPUPage(WINDOW* win);

@@ -64,31 +64,32 @@ void GuiController::navigateWindows() {
 void GuiController::changeWindow() {
 	switch (currentScreen) {
 	case HOME: {
-		drawBaseLayout(homeW, "Task Manager Plus", "Press left or right to traverse the screens");
+		drawBaseLayout(homeW, "Task Manager Plus", "Press left or right arrow keys to traverse the screens");
+		drawHomePage(homeW);
 		break;
 	}
 	case CPU: {
-		drawBaseLayout(cpuW, "CPU Monitor", "Press left or right to traverse the screens");
+		drawBaseLayout(cpuW, "CPU Monitor", "Press left or right arrow keys to traverse the screens");
 		drawCPUPage(cpuW);
 		break;
 	}
 	case DISK: {
-		drawBaseLayout(diskW, "Disk Monitor", "Press left or right to traverse the screens");
+		drawBaseLayout(diskW, "Disk Monitor", "Press left or right arrow keys to traverse the screens");
 		drawDiskPage(diskW);
 		break;
 	}
 	case GPU: {
-		drawBaseLayout(gpuW, "GPU Monitor", "Press left or right to traverse the screens");
+		drawBaseLayout(gpuW, "GPU Monitor", "Press left or right arrow keys to traverse the screens");
 		drawGPUPage(gpuW);
 		break;
 	}
 	case MEMORY: {
-		drawBaseLayout(memoryW, "Memory Monitor", "Press left or right to traverse the screens");
+		drawBaseLayout(memoryW, "Memory Monitor", "Press left or right arrow keys to traverse the screens");
 		drawMemoryPage(memoryW);
 		break;
 	}
 	case NETWORK: {
-		drawBaseLayout(networkW, "Network Monitor", "Press left or right to traverse the screens");
+		drawBaseLayout(networkW, "Network Monitor", "Press left or right arrow keys to traverse the screens");
 		drawNetworkPage(networkW);
 		break;
 	}
@@ -114,6 +115,27 @@ void GuiController::drawBaseLayout(WINDOW* win, const char* title, const char* f
 	if (currentScreen != HOME) {
 		drawGraphBox(win, 5, (cols / 2) - 22, 20, 75, "Utilisation Graph");
 	}
+	wrefresh(win);
+}
+
+void GuiController::drawHomePage(WINDOW* win) {
+	const char* banner[] = { " _____         _      __  __                                   ",
+		"|_   _|_ _ ___| | __ |  \\/  | __ _ _ __   __ _  __ _  ___ _ __ ",
+		"  | |/ _` / __| |/ / | |\\/| |/ _` | '_ \\ / _` |/ _` |/ _ \\ '__|",
+		"  | | (_| \\__ \\   <  | |  | | (_| | | | | (_| | (_| |  __/ |   ",
+		" _|_|\\__,_|___/_|\\_\\ |_|  |_|\\__,_|_| |_|\\__,_|\\__, |\\___|_|   ",
+		"|  _ \\| |_   _ ___                             |___/          ",
+		"| |_) | | | | / __|                                            ",
+		"|  __/| | |_| \\__ \\                                            ",
+		"|_|   |_|\\__,_|___/                                            "
+	};
+
+	int numLines = sizeof(banner) / sizeof(banner[0]);
+
+	for (int i = 0; i < numLines; ++i) {
+		mvwprintw(win, ((rows - numLines) / 2) + i, (cols - strlen(banner[0])) / 2, "%s", banner[i]);
+	}
+
 	wrefresh(win);
 }
 
@@ -230,11 +252,11 @@ void GuiController::drawGraphBox(WINDOW* win, int startY, int startX, int height
 	mvwprintw(graphBox, 0, (width - strlen(title)) / 2, "%s", title);
 
 	mvwprintw(win, startY, startX - 5, "100%%");
-	
+
 	mvwprintw(win, startY + (height / 4), startX - 5, "75%%");
 
 	mvwprintw(win, startY + (height / 2), startX - 5, "50%%");
-	
+
 	mvwprintw(win, (startY + height) - (height / 4), startX - 5, "25%%");
 
 	mvwprintw(win, startY + height - 1, startX - 5, "0%%");
@@ -248,7 +270,7 @@ void GuiController::renderCPUGraph(WINDOW* win, int height, int width) {
 	wattron(win, COLOR_PAIR(1));
 
 	for (int i = 1; i < systemStatus.cpuUsage.size(); i++) {
-		double currCpuUtil = std::round(systemStatus.cpuUsage[i - 1] / 5);
+		double currCpuUtil = std::ceil(systemStatus.cpuUsage[i - 1] / 5.0);
 		for (int j = 0; j < currCpuUtil; j++) {
 			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
 		}
@@ -263,7 +285,7 @@ void GuiController::renderDiskGraph(WINDOW* win, int height, int width) {
 	wattron(win, COLOR_PAIR(2));
 
 	for (int i = 1; i < systemStatus.diskTime.size(); i++) {
-		double currDiskUtil = std::round(systemStatus.diskTime[i - 1] / 5);
+		double currDiskUtil = std::ceil(systemStatus.diskTime[i - 1] / 5.0);
 		for (int j = 0; j < currDiskUtil; j++) {
 			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
 		}
@@ -278,7 +300,7 @@ void GuiController::renderGPUGraph(WINDOW* win, int height, int width) {
 	wattron(win, COLOR_PAIR(3));
 
 	for (int i = 1; i < systemStatus.gpuUsage.size(); i++) {
-		double currGpuUtil = std::round(systemStatus.gpuUsage[i - 1] / 5);
+		double currGpuUtil = std::ceil(systemStatus.gpuUsage[i - 1] / 5.0);
 		for (int j = 0; j < currGpuUtil; j++) {
 			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
 		}
@@ -293,7 +315,7 @@ void GuiController::renderMemoryGraph(WINDOW* win, int height, int width) {
 	wattron(win, COLOR_PAIR(4));
 
 	for (int i = 1; i < systemStatus.memoryUsage.size(); i++) {
-		double currMemoryUtil = std::round(systemStatus.memoryUsage[i - 1] / 5);
+		double currMemoryUtil = std::ceil(systemStatus.memoryUsage[i - 1] / 5.0);
 		for (int j = 0; j < currMemoryUtil; j++) {
 			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
 		}
@@ -308,7 +330,7 @@ void GuiController::renderNetworkGraph(WINDOW* win, int height, int width) {
 	wattron(win, COLOR_PAIR(5));
 
 	for (int i = 1; i < systemStatus.networkUsage.size(); i++) {
-		double currNetworkUtil = std::round(systemStatus.networkUsage[i - 1] / 5);
+		double currNetworkUtil = std::ceil(systemStatus.networkUsage[i - 1] / 5.0);
 		for (int j = 0; j < currNetworkUtil; j++) {
 			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
 		}
