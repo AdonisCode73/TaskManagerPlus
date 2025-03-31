@@ -136,11 +136,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\Desktop\ADLX-main\ADLX-main\SDK\ADLXHelper\Windows\Cpp\ADLXHelper.cpp" />
-    <ClCompile Include="..\..\..\..\Desktop\ADLX-main\ADLX-main\SDK\Platform\Windows\WinAPIs.cpp" />
     <ClCompile Include="CpuMonitor.cpp" />
     <ClCompile Include="DiskMonitor.cpp" />
     <ClCompile Include="GpuMonitor.cpp" />
     <ClCompile Include="GuiController.cpp" />
+    <ClCompile Include="Include\WinAPIs.cpp" />
     <ClCompile Include="Main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

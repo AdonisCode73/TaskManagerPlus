@@ -28,7 +28,7 @@
     <ClCompile Include="..\..\..\..\Desktop\ADLX-main\ADLX-main\SDK\ADLXHelper\Windows\Cpp\ADLXHelper.cpp">
       <Filter>ADLX Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Desktop\ADLX-main\ADLX-main\SDK\Platform\Windows\WinAPIs.cpp">
+    <ClCompile Include="Include\WinAPIs.cpp">
       <Filter>ADLX Files</Filter>
     </ClCompile>
   </ItemGroup>
