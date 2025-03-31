@@ -28,6 +28,7 @@ It's assumed that you have the following prior to running the application:
 - AMD GPU
 - CPP Compiler
 - Windows OS
+- Visual Studio OR CMake
 ---
 
 ## How To Run
