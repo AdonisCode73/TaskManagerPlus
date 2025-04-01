@@ -319,7 +319,8 @@ __pycache__/
 # Cake - Uncomment if you are using it
 tools/**
 !tools/packages.config
-build/
+build/*
+!build/.gitkeep
 
 # Tabs Studio
 *.tss
