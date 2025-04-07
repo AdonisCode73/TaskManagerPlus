@@ -177,11 +177,17 @@ void GuiController::drawGPUPage(WINDOW* win) {
 		/*std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);*/
 		mvwprintw(win, (rows / 2), 2, "GPU Usage: %.2f%%", systemStatus.gpuUsage.front());
 	}
-	mvwprintw(win, (rows / 2) + 1, 2, "GPU Temperature: %.1f%°c", systemStatus.gpuTemperature.load());
 
+#ifdef USE_AMD
+	mvwprintw(win, (rows / 2) + 1, 2, "GPU Temperature: %.1f%°c", systemStatus.gpuTemperature.load());
+	mvwprintw(win, (rows / 2) + 5, 2, "GPU Clock Speed: %.2f Mhz", systemStatus.gpuClockSpeed.load());
+#endif
+
+#ifdef USE_NVIDIA
+	mvwprintw(win, (rows / 2) + 1, 2, "GPU Temperature: %.2f%%", systemStatus.memControllerUsage.load());
+#endif
 	mvwprintw(win, (rows / 2) + 3, 2, "Total VRAM: %.2f GB", systemStatus.vramTotalMemory.load());
 	mvwprintw(win, (rows / 2) + 4, 2, "Available VRAM: %.2f GB", systemStatus.vramAvailMemory.load());
-	mvwprintw(win, (rows / 2) + 5, 2, "GPU Clock Speed: %.2f Mhz", systemStatus.gpuClockSpeed.load());
 
 	wrefresh(win);
 }

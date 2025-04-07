@@ -121,7 +121,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;USE_AMD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)Include\ADLX;$(ProjectDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\Desktop\ADLX-main\ADLX-main\SDK\ADLXHelper\Windows\Cpp\ADLXHelper.cpp" />
+    <ClCompile Include="ADLXController.cpp" />
     <ClCompile Include="CpuMonitor.cpp" />
     <ClCompile Include="DiskMonitor.cpp" />
     <ClCompile Include="GpuMonitor.cpp" />
@@ -147,8 +148,10 @@
     <ClCompile Include="MemoryMonitor.cpp" />
     <ClCompile Include="MonitorUtils.cpp" />
     <ClCompile Include="NetworkMonitor.cpp" />
+    <ClCompile Include="NVIDIAController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\ADLXController.h" />
     <ClInclude Include="Include\CpuMonitor.h" />
     <ClInclude Include="Include\DiskMonitor.h" />
     <ClInclude Include="Include\GpuMonitor.h" />
@@ -156,6 +159,7 @@
     <ClInclude Include="Include\MemoryMonitor.h" />
     <ClInclude Include="Include\MonitorUtils.h" />
     <ClInclude Include="Include\NetworkMonitor.h" />
+    <ClInclude Include="Include\NVIDIAController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

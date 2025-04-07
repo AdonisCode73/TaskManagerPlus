@@ -31,6 +31,12 @@
     <ClCompile Include="Include\WinAPIs.cpp">
       <Filter>ADLX Files</Filter>
     </ClCompile>
+    <ClCompile Include="ADLXController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NVIDIAController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -63,6 +69,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\GuiController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ADLXController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\NVIDIAController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -30,7 +30,7 @@ struct SystemStatus {
 	std::atomic <double> vramTotalMemory{ 0.0 };
 	std::deque <double> gpuUsage{ 0.0 };
 	/*std::mutex gpuMutex;*/
-	//std::atomic <double> memControllerUsage{ 0.0 };
+	std::atomic <double> memControllerUsage{ 0.0 };
 	std::atomic <double> gpuTemperature { 0.0 };
 	
 	std::atomic <double> totalDisk{ 0.0 };
