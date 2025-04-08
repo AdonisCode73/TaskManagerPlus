@@ -5,6 +5,8 @@ project(TaskManagerPlus VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(USE_AMD "Use AMD ADLX for GPU monitoring" ON)
+
 # Add executable and source files
 add_executable(TaskManagerPlus
     TaskManagerPlus/Main.cpp
@@ -30,10 +32,15 @@ target_include_directories(TaskManagerPlus PRIVATE
 
 target_compile_definitions(TaskManagerPlus PRIVATE UNICODE _UNICODE)
 
+if(USE_AMD)
+    target_compile_definitions(TaskManagerPlus PRIVATE USE_AMD)
+else()
+    target_compile_definitions(TaskManagerPlus PRIVATE USE_NVIDIA)
+endif()
+
 target_link_libraries(TaskManagerPlus PRIVATE
     "${CMAKE_SOURCE_DIR}/TaskManagerPlus/lib/OpenCL.lib"
     "${CMAKE_SOURCE_DIR}/TaskManagerPlus/lib/pdcurses.lib"
-    "${CMAKE_SOURCE_DIR}/TaskManagerPlus/lib/nvml.lib"
     Pdh
     iphlpapi
     kernel32

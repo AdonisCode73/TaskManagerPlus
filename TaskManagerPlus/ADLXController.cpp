@@ -1,6 +1,6 @@
 #include "ADLXController.h"
 
-
+#ifdef USE_AMD
 void ADLXController::initADLX() {
 	ADLX_RESULT  res = ADLX_FAIL;
 
@@ -51,3 +51,4 @@ void ADLXController::update() {
 	MonitorUtils::checkQueueSize(systemStatus.gpuUsage);
 	systemStatus.gpuUsage.push_front((double)gpuUsage);
 }
+#endif

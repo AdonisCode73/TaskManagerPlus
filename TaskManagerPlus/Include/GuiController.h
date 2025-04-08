@@ -5,9 +5,6 @@
 
 #define NUM_WINDOWS 6
 
-#define USE_AMD
-//#define USE_NVIDIA
-
 enum Screen {
 	HOME, 
 	CPU, 
