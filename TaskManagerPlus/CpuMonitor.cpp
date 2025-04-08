@@ -1,7 +1,7 @@
 #include "CpuMonitor.h"
 
 void CpuMonitor::start() {
-	PdhOpenQuery(NULL, NULL, &cpuQuery);
+	PdhOpenQuery(nullptr, NULL, &cpuQuery);
 	PdhAddEnglishCounter(cpuQuery, L"\\Processor(_Total)\\% Processor Time", NULL, &cpuTotal);
 	PdhCollectQueryData(cpuQuery);
 
@@ -20,7 +20,7 @@ double CpuMonitor::getUsage() {
 	PDH_FMT_COUNTERVALUE counterVal;
 
 	PdhCollectQueryData(cpuQuery);
-	PdhGetFormattedCounterValue(cpuTotal, PDH_FMT_DOUBLE, NULL, &counterVal);
+	PdhGetFormattedCounterValue(cpuTotal, PDH_FMT_DOUBLE, nullptr, &counterVal);
 	return counterVal.doubleValue;
 }
 

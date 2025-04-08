@@ -57,17 +57,5 @@ class MonitorUtils {
 		static void checkQueueSize(std::deque <double>);
 
 	private:
-		COORD initialCursorPos;
-
-		std::thread monitorThread;
-
-		void saveCursorPosition();
-
-		void restoreCursorPosition();
-
-		void monitorUtil();
-
 		bool isRunning = false;
-
-		bool jumpCursor = true;
 };

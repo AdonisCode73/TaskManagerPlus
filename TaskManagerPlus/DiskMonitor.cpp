@@ -3,7 +3,7 @@
 void DiskMonitor::start() {
 	update();
 
-	PdhOpenQuery(NULL, NULL, &diskQuery);
+	PdhOpenQuery(nullptr, NULL, &diskQuery);
 	PdhAddCounter(diskQuery, L"\\PhysicalDisk(_Total)\\Disk Read Bytes/sec", NULL, &readTotal);
 	PdhAddCounter(diskQuery, L"\\PhysicalDisk(_Total)\\Disk Write Bytes/sec", NULL, &writeTotal);
 	PdhAddCounter(diskQuery, L"\\PhysicalDisk(_Total)\\% Disk Time", 0, &diskTime);
@@ -28,9 +28,9 @@ void DiskMonitor::update() {
 
 void DiskMonitor::getUsage() {
 	PdhCollectQueryData(diskQuery);
-	PdhGetFormattedCounterValue(readTotal, PDH_FMT_DOUBLE, NULL, &readCounterVal);
-	PdhGetFormattedCounterValue(writeTotal, PDH_FMT_DOUBLE, NULL, &writeCounterVal);
-	PdhGetFormattedCounterValue(diskTime, PDH_FMT_DOUBLE, NULL, &diskTimeCounterVal);
+	PdhGetFormattedCounterValue(readTotal, PDH_FMT_DOUBLE, nullptr, &readCounterVal);
+	PdhGetFormattedCounterValue(writeTotal, PDH_FMT_DOUBLE, nullptr, &writeCounterVal);
+	PdhGetFormattedCounterValue(diskTime, PDH_FMT_DOUBLE, nullptr, &diskTimeCounterVal);
 	
 	systemStatus.readDisk = readCounterVal.doubleValue / 1024.0;
 	systemStatus.writeDisk = writeCounterVal.doubleValue / 1024.0;
