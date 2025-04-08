@@ -2,7 +2,6 @@
 
 #ifdef USE_NVIDIA
 void NVIDIAController::initNVML() {
-	LoadLibraryA("nvml.dll");
 	nvmlReturn_t result = nvmlInit();
 	if (result != NVML_SUCCESS) {
 		std::cerr << "Failed to initialize NVML: " << std::endl;

@@ -15,6 +15,8 @@ add_executable(TaskManagerPlus
     TaskManagerPlus/MonitorUtils.cpp
     TaskManagerPlus/NetworkMonitor.cpp
     TaskManagerPlus/GuiController.cpp
+    TaskManagerPlus/NVIDIAController.cpp
+    TaskManagerPlus/ADLXController.cpp
     TaskManagerPlus/Include/ADLXHelper.cpp
     TaskManagerPlus/Include/WinAPIs.cpp
 )
@@ -29,8 +31,9 @@ target_include_directories(TaskManagerPlus PRIVATE
 target_compile_definitions(TaskManagerPlus PRIVATE UNICODE _UNICODE)
 
 target_link_libraries(TaskManagerPlus PRIVATE
-    "${CMAKE_SOURCE_DIR}/lib/OpenCL.lib"
-    "${CMAKE_SOURCE_DIR}/lib/pdcurses.lib"
+    "${CMAKE_SOURCE_DIR}/TaskManagerPlus/lib/OpenCL.lib"
+    "${CMAKE_SOURCE_DIR}/TaskManagerPlus/lib/pdcurses.lib"
+    "${CMAKE_SOURCE_DIR}/TaskManagerPlus/lib/nvml.lib"
     Pdh
     iphlpapi
     kernel32
