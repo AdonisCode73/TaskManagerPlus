@@ -6,17 +6,15 @@ class CpuMonitor {
 
 	public:
 		void start();
-
 		void stop();
 
 	private:
-		std::thread cpuThread;
-		bool isRunning;
+		std::thread m_cpuThread;
+		bool m_isRunning;
 
-		PDH_HQUERY cpuQuery;
-		PDH_HCOUNTER cpuTotal;
+		PDH_HQUERY m_cpuQuery;
+		PDH_HCOUNTER m_cpuTotal;
 
 		void monitorLoop();
-		
 		double getUsage();
 };

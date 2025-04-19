@@ -10,21 +10,14 @@ class NetworkMonitor {
 
 
 	private:
-		MIB_IFTABLE* pIfTable;
-		ULONG ulSize;
-		MIB_IFROW row;
-		MIB_IFROW prevRow;
-		MIB_IFROW tempRow;
-		DWORD interfaceIndex;
-		bool selectedInterfaceIndex;
+		MIB_IFROW m_row;
+		MIB_IFROW m_prevRow;
+	
+		DWORD m_interfaceIndex;
+		bool m_selectedInterfaceIndex;
 
-		double networkUtil;
-
-		DWORD sentBytes;
-		DWORD recvBytes;
-
-		bool isRunning;
-		std::thread networkThread;
+		bool m_isRunning;
+		std::thread m_networkThread;
 
 		void monitorLoop();
 

@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <windows.h>
 #include <Pdh.h>
+#include <deque>
 
 #include "CpuMonitor.h"
 #include "MemoryMonitor.h"
@@ -12,7 +13,6 @@
 #include "DiskMonitor.h"
 #include "NetworkMonitor.h"
 #include "GuiController.h"
-#include <deque>
 
 #define MAX_QUEUE_SIZE 73
 struct SystemStatus {
@@ -55,7 +55,4 @@ class MonitorUtils {
 		bool isRunningCheck();
 
 		static void checkQueueSize(std::deque <double>);
-
-	private:
-		bool isRunning = false;
 };

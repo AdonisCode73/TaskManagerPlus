@@ -8,21 +8,13 @@ class DiskMonitor {
 		void stop();
 
 	private:
-		ULARGE_INTEGER availBytes;
-		ULARGE_INTEGER totalBytes;
-		ULARGE_INTEGER totalAvailBytes;
+		PDH_HQUERY m_diskQuery;
+		PDH_HCOUNTER m_readTotal;
+		PDH_HCOUNTER m_writeTotal;
+		PDH_HCOUNTER m_diskTime;
 
-		PDH_HQUERY diskQuery;
-		PDH_HCOUNTER readTotal;
-		PDH_HCOUNTER writeTotal;
-		PDH_HCOUNTER diskTime;
-
-		PDH_FMT_COUNTERVALUE readCounterVal;
-		PDH_FMT_COUNTERVALUE writeCounterVal;
-		PDH_FMT_COUNTERVALUE diskTimeCounterVal;
-
-		bool isRunning;
-		std::thread diskThread;
+		bool m_isRunning;
+		std::thread m_diskThread;
 
 		void update();
 

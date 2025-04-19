@@ -2,21 +2,21 @@
 
 void MemoryMonitor::start() {
 	update();
-	isRunning = true;
-	memoryThread = std::thread(&MemoryMonitor::monitorLoop, this);
+	m_isRunning = true;
+	m_memoryThread = std::thread(&MemoryMonitor::monitorLoop, this);
 }
 
 void MemoryMonitor::update() {
-	memInfo.dwLength = sizeof(MEMORYSTATUSEX);
-	GlobalMemoryStatusEx(&memInfo);
+	m_memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+	GlobalMemoryStatusEx(&m_memInfo);
 	calculateTotal();
 	calculateAvail();
 }
 
 void MemoryMonitor::stop() {
-	isRunning = false;
-	if (memoryThread.joinable()) {
-		memoryThread.join();
+	m_isRunning = false;
+	if (m_memoryThread.joinable()) {
+		m_memoryThread.join();
 	}
 }
 
@@ -25,15 +25,15 @@ double MemoryMonitor::calculateUtilisation() {
 }
 
 void MemoryMonitor::calculateTotal() {
-	systemStatus.ramTotalMemory = memInfo.ullTotalPhys / (1024.0 * 1024.0 * 1024.0);
+	systemStatus.ramTotalMemory = m_memInfo.ullTotalPhys / (1024.0 * 1024.0 * 1024.0);
 }
 
 void MemoryMonitor::calculateAvail() {
-	systemStatus.ramAvailMemory = memInfo.ullAvailPhys / (1024.0 * 1024.0 * 1024.0);
+	systemStatus.ramAvailMemory = m_memInfo.ullAvailPhys / (1024.0 * 1024.0 * 1024.0);
 }
 
 void MemoryMonitor::monitorLoop() {
-	while (isRunning) {
+	while (m_isRunning) {
 		update();
 		/*std::lock_guard<std::mutex> lock(systemStatus.memoryMutex);*/
 		MonitorUtils::checkQueueSize(systemStatus.memoryUsage);

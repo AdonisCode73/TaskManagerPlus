@@ -49,20 +49,18 @@ class GuiController {
 
 		std::map<WINDOW*, WINDOW*> windowGraphBox;
 
-		bool isRunning;
+		bool m_isRunning;
+		std::thread m_guiThread;
 
-		int rows, cols;
-		int screenIdx;
-		int userInput;
+		int m_rows, m_cols;
+		int m_screenIdx;
 
-		std::thread guiThread;
+		WINDOW* m_homeW;
+		WINDOW* m_cpuW;
+		WINDOW* m_diskW;
+		WINDOW* m_gpuW;
+		WINDOW* m_memoryW;
+		WINDOW* m_networkW;
 
-		WINDOW* homeW;
-		WINDOW* cpuW;
-		WINDOW* diskW;
-		WINDOW* gpuW;
-		WINDOW* memoryW;
-		WINDOW* networkW;
-
-		Screen currentScreen;
+		Screen m_currentScreen;
 };

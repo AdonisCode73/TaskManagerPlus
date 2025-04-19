@@ -14,18 +14,10 @@ public:
 	void update();
 
 private:
-	ADLXHelper adlxHelper;
 
-	IADLXGPUMetricsPtr gpuMetrics;
-	IADLXGPUMetricsSupportPtr gpuMetricsSupport;
+	ADLXHelper m_adlxHelper;
 
-	adlx_double gpuUsage;
-	adlx_int usedVram;
-	adlx_int gpuClockSpeed;
-	adlx_double gpuTemp;
-	adlx_int fanSpeed;
-
-	IADLXPerformanceMonitoringServicesPtr perfMonitoringService;
-	IADLXGPUPtr oneGPU;
+	IADLXPerformanceMonitoringServicesPtr m_perfMonitoringService;
+	IADLXGPUPtr m_oneGPU;
 };
 #endif

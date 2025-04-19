@@ -12,9 +12,6 @@ public:
 	void update();
 
 private:
-	nvmlDevice_t device;
-	nvmlReturn_t result;
-	nvmlMemory_t memInfo;
-	nvmlUtilization_t utilization;
+	nvmlReturn_t m_result;
 };
 #endif

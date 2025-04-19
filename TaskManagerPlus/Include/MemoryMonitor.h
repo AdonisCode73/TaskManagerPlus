@@ -9,14 +9,10 @@ class MemoryMonitor {
 		void stop();
 
 	private:
-		double totalPhysMem;
-		double availPhysMem;
-		double currentPhysMem;
+		MEMORYSTATUSEX m_memInfo;
 
-		MEMORYSTATUSEX memInfo;
-
-		std::thread memoryThread;
-		bool isRunning = false;
+		std::thread m_memoryThread;
+		bool m_isRunning = false;
 
 		double calculateUtilisation();
 
