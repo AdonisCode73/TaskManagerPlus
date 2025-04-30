@@ -9,7 +9,8 @@ void GpuMonitor::start() {
 	adlxController->initADLX();
 	adlxController->update();
 	m_gpuThread = std::thread(&GpuMonitor::monitorLoop<ADLXController>, this, adlxController);
-#else
+#endif
+#ifdef USE_NVIDIA
 	NVIDIAController* nvidiaController = new NVIDIAController();
 	nvidiaController->initNVML();
 	nvidiaController->update();
