@@ -42,9 +42,11 @@ void DiskMonitor::getUsage() {
 	
 	systemStatus.readDisk = readCounterVal.doubleValue / 1024.0;
 	systemStatus.writeDisk = writeCounterVal.doubleValue / 1024.0;
-	/*std::lock_guard<std::mutex> lock(systemStatus.diskMutex);*/
-	MonitorUtils::checkQueueSize(systemStatus.diskTime);
-	systemStatus.diskTime.push_front(diskTimeCounterVal.doubleValue);
+	{
+		std::lock_guard<std::mutex> lock(systemStatus.diskMutex);
+		MonitorUtils::checkQueueSize(systemStatus.diskTime);
+		systemStatus.diskTime.push_front(diskTimeCounterVal.doubleValue);
+	}
 }
 
 void DiskMonitor::monitorLoop() {

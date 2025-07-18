@@ -74,9 +74,11 @@ void NetworkMonitor::monitorLoop() {
 		systemStatus.receiveNetwork = (recvBytes * 8.0) / 1000.0;
 
 		double networkUtil = (((sentBytes + recvBytes) * 8.0) / (double)m_row.dwSpeed);
-		MonitorUtils::checkQueueSize(systemStatus.networkUsage);
-		systemStatus.networkUsage.push_front(networkUtil * 100.0);
-
+		{
+			std::lock_guard<std::mutex> lock(systemStatus.networkMutex);
+			MonitorUtils::checkQueueSize(systemStatus.networkUsage);
+			systemStatus.networkUsage.push_front(networkUtil * 100.0);
+		}
 		m_prevRow = m_row;
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}

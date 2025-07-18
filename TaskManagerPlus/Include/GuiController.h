@@ -1,8 +1,7 @@
 #pragma once
 #include <curses.h>
 #include <map>
-#include "MonitorUtils.h";
-
+#include "MonitorUtils.h"
 #define NUM_WINDOWS 6
 
 enum Screen {

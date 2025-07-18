@@ -56,7 +56,10 @@ void ADLXController::update() {
 
 	adlx_double gpuUsage;
 	gpuMetrics->GPUUsage(&gpuUsage);
-	MonitorUtils::checkQueueSize(systemStatus.gpuUsage);
-	systemStatus.gpuUsage.push_front((double)gpuUsage);
+	{
+		std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);
+		MonitorUtils::checkQueueSize(systemStatus.gpuUsage);
+		systemStatus.gpuUsage.push_front((double)gpuUsage);
+	}
 }
 #endif

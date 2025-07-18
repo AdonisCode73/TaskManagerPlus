@@ -110,8 +110,8 @@ void GuiController::updatePage() {
 void GuiController::drawBaseLayout(WINDOW* win, const char* title, const char* footer) {
 	wclear(win);
 
-	mvwprintw(win, 0, (m_cols - strlen(title)) / 2, "%s", title);
-	mvwprintw(win, m_rows - 1, (m_cols - strlen(footer)) / 2, "%s", footer);
+	mvwprintw(win, 0, (m_cols - static_cast<int>(strlen(title))) / 2, "%s", title);
+	mvwprintw(win, m_rows - 1, (m_cols - static_cast<int>(strlen(footer))) / 2, "%s", footer);
 
 	if (m_currentScreen != HOME) {
 		drawGraphBox(win, 5, (m_cols / 2) - 22, 20, 75, "Utilisation Graph");
@@ -134,7 +134,7 @@ void GuiController::drawHomePage(WINDOW* win) {
 	int numLines = sizeof(banner) / sizeof(banner[0]);
 
 	for (int i = 0; i < numLines; ++i) {
-		mvwprintw(win, ((m_rows - numLines) / 2) + i, (m_cols - strlen(banner[0])) / 2, "%s", banner[i]);
+		mvwprintw(win, ((m_rows - numLines) / 2) + i, (m_cols - static_cast<int>(strlen(banner[0]))) / 2, "%s", banner[i]);
 	}
 
 	wrefresh(win);
@@ -145,8 +145,10 @@ void GuiController::drawCPUPage(WINDOW* win) {
 
 	mvwprintw(win, (m_rows / 2) - 2, 2, "%s", header);
 	if (!systemStatus.cpuUsage.empty()) {
-		/*std::lock_guard<std::mutex> lock(systemStatus.cpuMutex);*/
-		mvwprintw(win, (m_rows / 2), 2, "CPU Utilisation: %.2f%%", systemStatus.cpuUsage.front());
+		{
+			std::lock_guard<std::mutex> lock(systemStatus.cpuMutex);
+			mvwprintw(win, (m_rows / 2), 2, "CPU Utilisation: %.2f%%", systemStatus.cpuUsage.front());
+		}
 	}
 	wrefresh(win);
 }
@@ -159,8 +161,10 @@ void GuiController::drawDiskPage(WINDOW* win) {
 	mvwprintw(win, (m_rows / 2), 2, "Write Speed: %.2f KB/s", systemStatus.writeDisk.load());
 	mvwprintw(win, (m_rows / 2) + 1, 2, "Read Speed: %.2f KB/s", systemStatus.readDisk.load());
 	if (!systemStatus.diskTime.empty()) {
-		/*std::lock_guard<std::mutex> lock(systemStatus.diskMutex);*/
-		mvwprintw(win, (m_rows / 2) + 2, 2, "Disk Utilisation: %.2f%%", systemStatus.diskTime.front());
+		{
+			std::lock_guard<std::mutex> lock(systemStatus.diskMutex);
+			mvwprintw(win, (m_rows / 2) + 2, 2, "Disk Utilisation: %.2f%%", systemStatus.diskTime.front());
+		}
 	}
 
 	mvwprintw(win, (m_rows / 2) + 4, 2, "Total Space: %.2f GB", systemStatus.totalDisk.load());
@@ -175,8 +179,10 @@ void GuiController::drawGPUPage(WINDOW* win) {
 	mvwprintw(win, (m_rows / 2) - 2, 2, "%s", header);
 
 	if (!systemStatus.gpuUsage.empty()) {
-		/*std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);*/
-		mvwprintw(win, (m_rows / 2), 2, "GPU Usage: %.2f%%", systemStatus.gpuUsage.front());
+		{
+			std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);
+			mvwprintw(win, (m_rows / 2), 2, "GPU Usage: %.2f%%", systemStatus.gpuUsage.front());
+		}
 	}
 
 #ifdef USE_AMD
@@ -199,8 +205,10 @@ void GuiController::drawMemoryPage(WINDOW* win) {
 	mvwprintw(win, (m_rows / 2) - 2, 2, "%s", header);
 
 	if (!systemStatus.memoryUsage.empty()) {
-		/*std::lock_guard<std::mutex> lock(systemStatus.memoryMutex);*/
-		mvwprintw(win, (m_rows / 2), 2, "RAM Usage: %.2f%%", systemStatus.memoryUsage.front());
+		{
+			std::lock_guard<std::mutex> lock(systemStatus.memoryMutex);
+			mvwprintw(win, (m_rows / 2), 2, "RAM Usage: %.2f%%", systemStatus.memoryUsage.front());
+		}
 	}
 
 	mvwprintw(win, (m_rows / 2) + 2, 2, "Total RAM: %.2f GB", systemStatus.ramTotalMemory.load());
@@ -212,7 +220,13 @@ void GuiController::drawNetworkPage(WINDOW* win) {
 	const char* header = "Network Utilisation";
 
 	mvwprintw(win, (m_rows / 2) - 2, 2, "%s", header);
-	mvwprintw(win, (m_rows / 2), 2, "Network Usage: %.2f%%", systemStatus.networkUsage.front());
+
+	if (!systemStatus.networkUsage.empty()) {
+		{
+			std::lock_guard<std::mutex> lock(systemStatus.networkMutex);
+			mvwprintw(win, (m_rows / 2), 2, "Network Usage: %.2f%%", systemStatus.networkUsage.front());
+		}
+	}
 
 	mvwprintw(win, (m_rows / 2) + 2, 2, "Network Bytes Sent: %.2f Kbps", systemStatus.sendNetwork.load());
 	mvwprintw(win, (m_rows / 2) + 3, 2, "Network Bytes Received: %.2f Kbps", systemStatus.receiveNetwork.load());
@@ -256,7 +270,7 @@ void GuiController::drawGraphBox(WINDOW* win, int startY, int startX, int height
 
 	box(graphBox, 0, 0);
 
-	mvwprintw(graphBox, 0, (width - strlen(title)) / 2, "%s", title);
+	mvwprintw(graphBox, 0, (width - static_cast<int>(strlen(title))) / 2, "%s", title);
 
 	mvwprintw(win, startY, startX - 5, "100%%");
 

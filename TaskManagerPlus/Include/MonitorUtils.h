@@ -17,10 +17,10 @@
 #define MAX_QUEUE_SIZE 73
 struct SystemStatus {
 	std::deque <double> cpuUsage{ 0.0 };
-	/*std::mutex cpuMutex;*/
+	std::mutex cpuMutex;
 
 	std::deque <double> memoryUsage{ 0.0 };
-	/*std::mutex memoryMutex;*/
+	std::mutex memoryMutex;
 	std::atomic <double> ramAvailMemory{ 0.0 };
 	std::atomic <double> ramTotalMemory{ 0.0 };
 
@@ -29,7 +29,7 @@ struct SystemStatus {
 	std::atomic <double> gpuFanSpeed { 0.0 };
 	std::atomic <double> vramTotalMemory{ 0.0 };
 	std::deque <double> gpuUsage{ 0.0 };
-	/*std::mutex gpuMutex;*/
+	std::mutex gpuMutex;
 	std::atomic <double> memControllerUsage{ 0.0 };
 	std::atomic <double> gpuTemperature { 0.0 };
 	
@@ -38,11 +38,12 @@ struct SystemStatus {
 	std::atomic <double> readDisk{ 0.0 };
 	std::atomic <double> writeDisk{ 0.0 };
 	std::deque <double> diskTime{ 0.0 };
-	/*std::mutex diskMutex;*/
+	std::mutex diskMutex;
 	
 	std::atomic <double> sendNetwork{ 0.0 };
 	std::atomic <double> receiveNetwork{ 0.0 };
 	std::deque <double> networkUsage{ 0.0 };
+	std::mutex networkMutex;
 };
 extern	SystemStatus systemStatus;
 

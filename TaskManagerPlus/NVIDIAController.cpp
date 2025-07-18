@@ -32,9 +32,11 @@ void NVIDIAController::update() {
 	}
 
 	systemStatus.vramAvailMemory = memInfo.free / (1024.0 * 1024.0 * 1024.0);
-	/*std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);*/
-	MonitorUtils::checkQueueSize(systemStatus.gpuUsage);
-	systemStatus.gpuUsage.push_front((double)utilization.gpu);
-	systemStatus.memControllerUsage = utilization.memory;
+	{
+		std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);
+		MonitorUtils::checkQueueSize(systemStatus.gpuUsage);
+		systemStatus.gpuUsage.push_front((double)utilization.gpu);
+		systemStatus.memControllerUsage = utilization.memory;
+	}
 }
 #endif

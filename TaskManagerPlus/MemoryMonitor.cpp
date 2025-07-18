@@ -35,9 +35,11 @@ void MemoryMonitor::calculateAvail() {
 void MemoryMonitor::monitorLoop() {
 	while (m_isRunning) {
 		update();
-		/*std::lock_guard<std::mutex> lock(systemStatus.memoryMutex);*/
-		MonitorUtils::checkQueueSize(systemStatus.memoryUsage);
-		systemStatus.memoryUsage.push_front(calculateUtilisation());
+		{
+			std::lock_guard<std::mutex> lock(systemStatus.memoryMutex);
+			MonitorUtils::checkQueueSize(systemStatus.memoryUsage);
+			systemStatus.memoryUsage.push_front(calculateUtilisation());
+		}
 		Sleep(1000);
 	}
 }

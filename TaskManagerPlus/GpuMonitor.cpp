@@ -28,7 +28,7 @@ template <typename T>
 void GpuMonitor::monitorLoop(T* controllerObj) {
 	while (m_isRunning) {
 		controllerObj->update();
-		Sleep(1000);
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }
 
