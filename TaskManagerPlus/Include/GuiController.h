@@ -1,6 +1,7 @@
 #pragma once
 #include <curses.h>
 #include <map>
+#include <unordered_map>
 #include "MonitorUtils.h"
 #define NUM_WINDOWS 6
 
@@ -46,20 +47,14 @@ class GuiController {
 
 		void updatePage();
 
-		std::map<WINDOW*, WINDOW*> windowGraphBox;
+		std::unordered_map<Screen, WINDOW*> m_screenWindows;
+		std::unordered_map<Screen, WINDOW*> m_screenGraphBoxes;
 
 		bool m_isRunning;
 		std::thread m_guiThread;
 
 		int m_rows, m_cols;
 		int m_screenIdx;
-
-		WINDOW* m_homeW;
-		WINDOW* m_cpuW;
-		WINDOW* m_diskW;
-		WINDOW* m_gpuW;
-		WINDOW* m_memoryW;
-		WINDOW* m_networkW;
 
 		Screen m_currentScreen;
 };

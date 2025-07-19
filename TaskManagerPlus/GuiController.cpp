@@ -8,12 +8,10 @@ void GuiController::guiInit() {
 
 	getmaxyx(stdscr, m_rows, m_cols);
 
-	m_homeW = newwin(m_rows, m_cols, 0, 0);
-	m_cpuW = newwin(m_rows, m_cols, 0, 0);
-	m_diskW = newwin(m_rows, m_cols, 0, 0);
-	m_gpuW = newwin(m_rows, m_cols, 0, 0);
-	m_memoryW = newwin(m_rows, m_cols, 0, 0);
-	m_networkW = newwin(m_rows, m_cols, 0, 0);
+	for (int i = 0; i < NUM_WINDOWS; i++) {
+		Screen screen = static_cast<Screen>(i);
+		m_screenWindows[screen] = newwin(m_rows, m_cols, 0, 0);
+	}
 
 	m_currentScreen = HOME;
 	m_screenIdx = 0;
@@ -44,6 +42,17 @@ void GuiController::navigateWindows() {
 	int userInput;
 	while ((userInput = getch()) != '\n') {
 		switch (userInput) {
+		case KEY_RESIZE:
+			getmaxyx(stdscr, m_rows, m_cols);
+			for (auto& pair : m_screenWindows) {
+				WINDOW* win = pair.second;
+				wresize(win, m_rows, m_cols);
+			}
+			m_screenGraphBoxes.clear();
+			clear();
+			refresh();
+			changeWindow();
+			break;
 		case KEY_LEFT:
 			m_screenIdx = (m_screenIdx == 0) ? NUM_WINDOWS - 1 : m_screenIdx - 1;
 			m_currentScreen = static_cast<Screen>(m_screenIdx);
@@ -63,35 +72,37 @@ void GuiController::navigateWindows() {
 }
 
 void GuiController::changeWindow() {
+	WINDOW* win = m_screenWindows[m_currentScreen];
+
 	switch (m_currentScreen) {
 	case HOME: {
-		drawBaseLayout(m_homeW, "Task Manager Plus", "Press left or right arrow keys to traverse the screens");
-		drawHomePage(m_homeW);
+		drawBaseLayout(win, "Task Manager Plus", "Press left or right arrow keys to traverse the screens");
+		drawHomePage(win);
 		break;
 	}
 	case CPU: {
-		drawBaseLayout(m_cpuW, "CPU Monitor", "Press left or right arrow keys to traverse the screens");
-		drawCPUPage(m_cpuW);
+		drawBaseLayout(win, "CPU Monitor", "Press left or right arrow keys to traverse the screens");
+		drawCPUPage(win);
 		break;
 	}
 	case DISK: {
-		drawBaseLayout(m_diskW, "Disk Monitor", "Press left or right arrow keys to traverse the screens");
-		drawDiskPage(m_diskW);
+		drawBaseLayout(win, "Disk Monitor", "Press left or right arrow keys to traverse the screens");
+		drawDiskPage(win);
 		break;
 	}
 	case GPU: {
-		drawBaseLayout(m_gpuW, "GPU Monitor", "Press left or right arrow keys to traverse the screens");
-		drawGPUPage(m_gpuW);
+		drawBaseLayout(win, "GPU Monitor", "Press left or right arrow keys to traverse the screens");
+		drawGPUPage(win);
 		break;
 	}
 	case MEMORY: {
-		drawBaseLayout(m_memoryW, "Memory Monitor", "Press left or right arrow keys to traverse the screens");
-		drawMemoryPage(m_memoryW);
+		drawBaseLayout(win, "Memory Monitor", "Press left or right arrow keys to traverse the screens");
+		drawMemoryPage(win);
 		break;
 	}
 	case NETWORK: {
-		drawBaseLayout(m_networkW, "Network Monitor", "Press left or right arrow keys to traverse the screens");
-		drawNetworkPage(m_networkW);
+		drawBaseLayout(win, "Network Monitor", "Press left or right arrow keys to traverse the screens");
+		drawNetworkPage(win);
 		break;
 	}
 	default:
@@ -114,7 +125,14 @@ void GuiController::drawBaseLayout(WINDOW* win, const char* title, const char* f
 	mvwprintw(win, m_rows - 1, (m_cols - static_cast<int>(strlen(footer))) / 2, "%s", footer);
 
 	if (m_currentScreen != HOME) {
-		drawGraphBox(win, 5, (m_cols / 2) - 22, 20, 75, "Utilisation Graph");
+		int margin = 2;
+		int graphHeight = m_rows - 10;
+		int graphWidth = m_cols / 2 - margin * 2;
+		int startX = m_cols / 2 + margin;
+		int startY = 4;
+
+		drawGraphBox(win, startY, startX, graphHeight, graphWidth, "Utilisation Graph");
+		//drawGraphBox(win, 5, (m_cols / 2) - 22, 20, 75, "Utilisation Graph");
 	}
 	wrefresh(win);
 }
@@ -236,32 +254,32 @@ void GuiController::drawNetworkPage(WINDOW* win) {
 
 void GuiController::drawGraphBox(WINDOW* win, int startY, int startX, int height, int width, const char* title) {
 
-	WINDOW* graphBox = windowGraphBox[win];
+	WINDOW* graphBox = m_screenGraphBoxes[m_currentScreen];
 
 	if (!graphBox) {
 		graphBox = derwin(win, height, width, startY, startX);
-		windowGraphBox[win] = graphBox;
+		m_screenGraphBoxes[m_currentScreen] = graphBox;
 	}
 
 	switch (m_currentScreen) {
 	case CPU: {
-		renderCPUGraph(windowGraphBox[win], height, width);
+		renderCPUGraph(graphBox, height, width);
 		break;
 	}
 	case DISK: {
-		renderDiskGraph(windowGraphBox[win], height, width);
+		renderDiskGraph(graphBox, height, width);
 		break;
 	}
 	case GPU: {
-		renderGPUGraph(windowGraphBox[win], height, width);
+		renderGPUGraph(graphBox, height, width);
 		break;
 	}
 	case MEMORY: {
-		renderMemoryGraph(windowGraphBox[win], height, width);
+		renderMemoryGraph(graphBox, height, width);
 		break;
 	}
 	case NETWORK: {
-		renderNetworkGraph(windowGraphBox[win], height, width);
+		renderNetworkGraph(graphBox, height, width);
 		break;
 	}
 	default:
