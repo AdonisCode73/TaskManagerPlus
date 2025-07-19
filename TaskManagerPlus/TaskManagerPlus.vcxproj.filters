@@ -77,5 +77,8 @@
     <ClInclude Include="Include\NVIDIAController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IGpuController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

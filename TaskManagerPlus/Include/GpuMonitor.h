@@ -3,6 +3,7 @@
 #include "CL/cl.h"
 #include "ADLXController.h"
 #include "NVIDIAController.h"
+#include "IGpuController.h"
 
 class GpuMonitor {
 
@@ -16,9 +17,8 @@ class GpuMonitor {
 		std::thread m_gpuThread;
 		
 		cl_device_id m_deviceID;
-
-		template <typename T>	
-		void monitorLoop(std::unique_ptr<T> controllerObj);
+	
+		void monitorLoop(std::unique_ptr<IGpuController> controllerObj);
 		
 		void initOpenCL();
 
