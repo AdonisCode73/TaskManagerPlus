@@ -76,32 +76,32 @@ void GuiController::changeWindow() {
 
 	switch (m_currentScreen) {
 	case HOME: {
-		drawBaseLayout(win, "Task Manager Plus", "Press left or right arrow keys to traverse the screens");
+		drawBaseLayout(win, "Task Manager Plus");
 		drawHomePage(win);
 		break;
 	}
 	case CPU: {
-		drawBaseLayout(win, "CPU Monitor", "Press left or right arrow keys to traverse the screens");
+		drawBaseLayout(win, "CPU Monitor");
 		drawCPUPage(win);
 		break;
 	}
 	case DISK: {
-		drawBaseLayout(win, "Disk Monitor", "Press left or right arrow keys to traverse the screens");
+		drawBaseLayout(win, "Disk Monitor");
 		drawDiskPage(win);
 		break;
 	}
 	case GPU: {
-		drawBaseLayout(win, "GPU Monitor", "Press left or right arrow keys to traverse the screens");
+		drawBaseLayout(win, "GPU Monitor");
 		drawGPUPage(win);
 		break;
 	}
 	case MEMORY: {
-		drawBaseLayout(win, "Memory Monitor", "Press left or right arrow keys to traverse the screens");
+		drawBaseLayout(win, "Memory Monitor");
 		drawMemoryPage(win);
 		break;
 	}
 	case NETWORK: {
-		drawBaseLayout(win, "Network Monitor", "Press left or right arrow keys to traverse the screens");
+		drawBaseLayout(win, "Network Monitor");
 		drawNetworkPage(win);
 		break;
 	}
@@ -118,8 +118,10 @@ void GuiController::updatePage() {
 	}
 }
 
-void GuiController::drawBaseLayout(WINDOW* win, const char* title, const char* footer) {
+void GuiController::drawBaseLayout(WINDOW* win, const char* title) {
 	wclear(win);
+
+	const char* footer = "Press left or right arrow keys to traverse the screens";
 
 	mvwprintw(win, 0, (m_cols - static_cast<int>(strlen(title))) / 2, "%s", title);
 	mvwprintw(win, m_rows - 1, (m_cols - static_cast<int>(strlen(footer))) / 2, "%s", footer);

@@ -35,7 +35,7 @@ void NVIDIAController::update() {
 	{
 		std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);
 		MonitorUtils::checkQueueSize(systemStatus.gpuUsage);
-		systemStatus.gpuUsage.push_front((double)utilization.gpu);
+		systemStatus.gpuUsage.push_front(static_cast<double>(utilization.gpu));
 		systemStatus.memControllerUsage = utilization.memory;
 	}
 }

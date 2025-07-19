@@ -40,26 +40,26 @@ void ADLXController::update() {
 
 	adlx_int usedVram;
 	gpuMetrics->GPUVRAM(&usedVram);
-	systemStatus.vramAvailMemory = (double)(systemStatus.vramTotalMemory - (usedVram / 1024.0));
+	systemStatus.vramAvailMemory = static_cast<double>((systemStatus.vramTotalMemory - (usedVram / 1024.0)));
 
 	adlx_int gpuClockSpeed;
 	gpuMetrics->GPUClockSpeed(&gpuClockSpeed);
-	systemStatus.gpuClockSpeed = (double)gpuClockSpeed;
+	systemStatus.gpuClockSpeed = static_cast<double>(gpuClockSpeed);
 
 	adlx_double gpuTemp;
 	gpuMetrics->GPUTemperature(&gpuTemp);
-	systemStatus.gpuTemperature = (double)gpuTemp;
+	systemStatus.gpuTemperature = static_cast<double>(gpuTemp);
 
 	adlx_int fanSpeed;
 	gpuMetrics->GPUFanSpeed(&fanSpeed);
-	systemStatus.gpuFanSpeed = (double)fanSpeed;
+	systemStatus.gpuFanSpeed = static_cast<double>(fanSpeed);
 
 	adlx_double gpuUsage;
 	gpuMetrics->GPUUsage(&gpuUsage);
 	{
 		std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);
 		MonitorUtils::checkQueueSize(systemStatus.gpuUsage);
-		systemStatus.gpuUsage.push_front((double)gpuUsage);
+		systemStatus.gpuUsage.push_front(static_cast<double>(gpuUsage));
 	}
 }
 #endif

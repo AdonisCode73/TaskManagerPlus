@@ -40,7 +40,7 @@ void MemoryMonitor::monitorLoop() {
 			MonitorUtils::checkQueueSize(systemStatus.memoryUsage);
 			systemStatus.memoryUsage.push_front(calculateUtilisation());
 		}
-		Sleep(1000);
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }
 

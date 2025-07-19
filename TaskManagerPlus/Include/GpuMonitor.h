@@ -18,7 +18,7 @@ class GpuMonitor {
 		cl_device_id m_deviceID;
 
 		template <typename T>	
-		void monitorLoop(T* controllerObj);
+		void monitorLoop(std::unique_ptr<T> controllerObj);
 		
 		void initOpenCL();
 

@@ -5,16 +5,16 @@ void GpuMonitor::start() {
 
 	m_isRunning = true;
 #ifdef USE_AMD
-	ADLXController* adlxController = new ADLXController();
+	std::unique_ptr<ADLXController> adlxController = std::make_unique<ADLXController>();
 	adlxController->initADLX();
 	adlxController->update();
-	m_gpuThread = std::thread(&GpuMonitor::monitorLoop<ADLXController>, this, adlxController);
+	m_gpuThread = std::thread(&GpuMonitor::monitorLoop<ADLXController>, this, std::move(adlxController));
 #endif
 #ifdef USE_NVIDIA
-	NVIDIAController* nvidiaController = new NVIDIAController();
+	std::unique_ptr<NVIDIAController> nvidiaController = std::make_unique<NVIDIAController>();
 	nvidiaController->initNVML();
 	nvidiaController->update();
-	m_gpuThread = std::thread(&GpuMonitor::monitorLoop<NVIDIAController>, this, nvidiaController);
+	m_gpuThread = std::thread(&GpuMonitor::monitorLoop<NVIDIAController>, this, std::move(nvidiaController));
 #endif
 }
 
@@ -25,7 +25,7 @@ void GpuMonitor::stop() {
 	}
 }
 template <typename T>
-void GpuMonitor::monitorLoop(T* controllerObj) {
+void GpuMonitor::monitorLoop(std::unique_ptr<T> controllerObj) {
 	while (m_isRunning) {
 		controllerObj->update();
 		std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -56,5 +56,5 @@ void GpuMonitor::initOpenCL() {
 void GpuMonitor::calculateTotalMem() {
 	cl_ulong totalMemory;
 	clGetDeviceInfo(m_deviceID, CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(cl_ulong), &totalMemory, nullptr);
-	systemStatus.vramTotalMemory = (double) totalMemory / (1024.0 * 1024.0 * 1024.0);
+	systemStatus.vramTotalMemory = totalMemory/ (1024.0 * 1024.0 * 1024.0);
 }
