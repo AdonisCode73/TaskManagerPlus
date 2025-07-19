@@ -1,12 +1,8 @@
 #include "NetworkMonitor.h"
 
 void NetworkMonitor::start() {
-	m_selectedInterfaceIndex = false;
-	m_interfaceIndex = 0;
-
 	getNetworkInfo();
 
-	m_isRunning = true;
 	m_networkThread = std::thread(&NetworkMonitor::monitorLoop, this);
 }
 

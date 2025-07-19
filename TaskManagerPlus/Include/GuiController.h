@@ -39,25 +39,21 @@ class GuiController {
 		void drawMemoryPage(WINDOW* win);
 		void drawNetworkPage(WINDOW* win);
 
-		void renderCPUGraph(WINDOW* win, int height, int width);
-		void renderDiskGraph(WINDOW* win, int height, int width);
-		void renderGPUGraph(WINDOW* win, int height, int width);
-		void renderMemoryGraph(WINDOW* win, int height, int width);
-		void renderNetworkGraph(WINDOW* win, int height, int width);
+		void renderGraph(WINDOW* win, const std::deque<double>& data, int height, int width, int colourPair);
 
 		void updatePage();
 
 		std::unordered_map<Screen, WINDOW*> m_screenWindows;
 		std::unordered_map<Screen, WINDOW*> m_screenGraphBoxes;
 
-		bool m_isRunning;
+		bool m_isRunning = true;
 		std::thread m_guiThread;
 
-		int m_rows, m_cols;
-		int m_screenIdx;
-		int m_maxBars;
+		int m_rows, m_cols = 0;
+		int m_screenIdx = 0;
+		int m_maxBars = 0;
 
-		Screen m_currentScreen;
+		Screen m_currentScreen = HOME;
 
         std::mutex m_drawMutex;
 };

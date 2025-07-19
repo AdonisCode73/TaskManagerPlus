@@ -13,10 +13,10 @@ class GpuMonitor {
 		void stop();
 
 	private:
-		bool m_isRunning;
+		bool m_isRunning = true;
 		std::thread m_gpuThread;
 		
-		cl_device_id m_deviceID;
+		cl_device_id m_deviceID = nullptr;
 	
 		void monitorLoop(std::unique_ptr<IGpuController> controllerObj);
 		

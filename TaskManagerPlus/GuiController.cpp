@@ -29,7 +29,6 @@ void GuiController::guiInit() {
 void GuiController::start() {
 	guiInit();
 
-	m_isRunning = true;
 	m_guiThread = std::thread(&GuiController::updatePage, this);
 
 	navigateWindows();
@@ -283,29 +282,31 @@ void GuiController::drawGraphBox(WINDOW* win, int startY, int startX, int height
 	graphBox = derwin(win, height, width, startY, startX);
 	m_screenGraphBoxes[m_currentScreen] = graphBox;
 
+	int colourPair = static_cast<int>(m_currentScreen);
+
 	switch (m_currentScreen) {
-	case CPU: {
-		renderCPUGraph(graphBox, height, width);
-		break;
-	}
-	case DISK: {
-		renderDiskGraph(graphBox, height, width);
-		break;
-	}
-	case GPU: {
-		renderGPUGraph(graphBox, height, width);
-		break;
-	}
-	case MEMORY: {
-		renderMemoryGraph(graphBox, height, width);
-		break;
-	}
-	case NETWORK: {
-		renderNetworkGraph(graphBox, height, width);
-		break;
-	}
-	default:
-		break;
+		case CPU: {
+			renderGraph(graphBox, systemStatus.cpuUsage, height, width, colourPair);
+			break;
+		}
+		case DISK: {
+			renderGraph(graphBox, systemStatus.diskTime, height, width, colourPair);
+			break;
+		}
+		case GPU: {
+			renderGraph(graphBox, systemStatus.gpuUsage, height, width, colourPair);
+			break;
+		}
+		case MEMORY: {
+			renderGraph(graphBox, systemStatus.memoryUsage, height, width, colourPair);
+			break;
+		}
+		case NETWORK: {
+			renderGraph(graphBox, systemStatus.networkUsage, height, width, colourPair);
+			break;
+		}
+		default:
+			break;
 	}
 
 	box(graphBox, 0, 0);
@@ -325,94 +326,22 @@ void GuiController::drawGraphBox(WINDOW* win, int startY, int startX, int height
 	wrefresh(graphBox);
 }
 
-void GuiController::renderCPUGraph(WINDOW* win, int height, int width) {
+void GuiController::renderGraph(WINDOW* win, const std::deque<double>& data, int height, int width, int colourPair) {
 	werase(win);
 
-	wattron(win, COLOR_PAIR(1));
+	wattron(win, COLOR_PAIR(colourPair));
 
-	int dataPoints = static_cast<int>(std::min(systemStatus.cpuUsage.size(), static_cast<size_t>(m_maxBars)));
+	int dataPoints = static_cast<int>(std::min(data.size(), static_cast<size_t>(m_maxBars)));
 
 	for (int i = 1; i < dataPoints; i++) {
-		double usage = systemStatus.cpuUsage[i];
+		double usage = data[i];
 		int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
 		for (int j = 0; j < barHeight; j++) {
 			mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
 		}
 	}
 
-	wattroff(win, COLOR_PAIR(1));
-}
-
-void GuiController::renderDiskGraph(WINDOW* win, int height, int width) {
-	werase(win);
-
-	wattron(win, COLOR_PAIR(2));
-
-	int dataPoints = static_cast<int>(std::min(systemStatus.diskTime.size(), static_cast<size_t>(m_maxBars)));
-
-	for (int i = 1; i < dataPoints; i++) {
-		double usage = systemStatus.diskTime[i];
-		int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
-		for (int j = 0; j < barHeight; j++) {
-			mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
-		}
-	}
-
-	wattroff(win, COLOR_PAIR(2));
-}
-
-void GuiController::renderGPUGraph(WINDOW* win, int height, int width) {
-	werase(win);
-
-	wattron(win, COLOR_PAIR(3));
-
-	int dataPoints = static_cast<int>(std::min(systemStatus.gpuUsage.size(), static_cast<size_t>(m_maxBars)));
-
-	for (int i = 1; i < dataPoints; i++) {
-		double usage = systemStatus.gpuUsage[i];
-		int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
-		for (int j = 0; j < barHeight; j++) {
-			mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
-		}
-	}
-
-	wattroff(win, COLOR_PAIR(3));
-}
-
-void GuiController::renderMemoryGraph(WINDOW* win, int height, int width) {
-	werase(win);
-
-	wattron(win, COLOR_PAIR(4));
-
-	int dataPoints = static_cast<int>(std::min(systemStatus.memoryUsage.size(), static_cast<size_t>(m_maxBars)));
-
-	for (int i = 1; i < dataPoints; i++) {
-		double usage = systemStatus.memoryUsage[i]; 
-		int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
-		for (int j = 0; j < barHeight; j++) {
-			mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
-		}
-	}
-
-	wattroff(win, COLOR_PAIR(4));
-}
-
-void GuiController::renderNetworkGraph(WINDOW* win, int height, int width) {
-	werase(win);
-
-	wattron(win, COLOR_PAIR(5));
-
-	int dataPoints = static_cast<int>(std::min(systemStatus.networkUsage.size(), static_cast<size_t>(m_maxBars)));
-
-	for (int i = 1; i < dataPoints; i++) {
-		double usage = systemStatus.networkUsage[i];
-		int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
-		for (int j = 0; j < barHeight; j++) {
-			mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
-		}
-	}
-
-	wattroff(win, COLOR_PAIR(5));
+	wattroff(win, COLOR_PAIR(colourPair));
 }
 
 void GuiController::stop() {

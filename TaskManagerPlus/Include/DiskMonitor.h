@@ -8,12 +8,12 @@ class DiskMonitor {
 		void stop();
 
 	private:
-		PDH_HQUERY m_diskQuery;
-		PDH_HCOUNTER m_readTotal;
-		PDH_HCOUNTER m_writeTotal;
-		PDH_HCOUNTER m_diskTime;
+		PDH_HQUERY m_diskQuery = nullptr;
+		PDH_HCOUNTER m_readTotal = nullptr;
+		PDH_HCOUNTER m_writeTotal = nullptr;
+		PDH_HCOUNTER m_diskTime = nullptr;
 
-		bool m_isRunning;
+		bool m_isRunning = true;
 		std::thread m_diskThread;
 
 		void update();

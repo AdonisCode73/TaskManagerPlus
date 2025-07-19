@@ -5,8 +5,6 @@ static std::unique_ptr<IGpuController> createGpuController();
 void GpuMonitor::start() {
 	initOpenCL();
 
-	m_isRunning = true;
-
 	std::unique_ptr<IGpuController> controller = createGpuController();
 	controller->update();
 	m_gpuThread = std::thread(&GpuMonitor::monitorLoop, this, std::move(controller));

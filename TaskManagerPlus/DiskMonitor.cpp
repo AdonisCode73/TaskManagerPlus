@@ -9,7 +9,6 @@ void DiskMonitor::start() {
 	PdhAddCounter(m_diskQuery, L"\\PhysicalDisk(_Total)\\% Disk Time", 0, &m_diskTime);
 	PdhCollectQueryData(m_diskQuery);
 
-	m_isRunning = true;
 	m_diskThread = std::thread(&DiskMonitor::monitorLoop, this);
 }
 

@@ -23,6 +23,7 @@ bool MonitorUtils::isRunningCheck() {
 	if (std::cin.get() == '\n') {
 		return false;
 	}
+	return true;
 }
 
 void MonitorUtils::stop() {

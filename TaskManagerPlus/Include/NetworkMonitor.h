@@ -10,13 +10,13 @@ class NetworkMonitor {
 
 
 	private:
-		MIB_IFROW m_row;
-		MIB_IFROW m_prevRow;
+		MIB_IFROW m_row{};
+		MIB_IFROW m_prevRow{};
 	
-		DWORD m_interfaceIndex;
-		bool m_selectedInterfaceIndex;
+		DWORD m_interfaceIndex = 0;
+		bool m_selectedInterfaceIndex = false;
 
-		bool m_isRunning;
+		bool m_isRunning = true;
 		std::thread m_networkThread;
 
 		void monitorLoop();

@@ -5,7 +5,6 @@ void CpuMonitor::start() {
 	PdhAddEnglishCounter(m_cpuQuery, L"\\Processor(_Total)\\% Processor Time", NULL, &m_cpuTotal);
 	PdhCollectQueryData(m_cpuQuery);
 
-	m_isRunning = true;
 	m_cpuThread = std::thread(&CpuMonitor::monitorLoop, this);
 }
 
