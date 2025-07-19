@@ -1,6 +1,7 @@
 #pragma once
 #include <curses.h>
 #include <unordered_map>
+#include <algorithm>
 #include "MonitorUtils.h"
 #define NUM_WINDOWS 6
 
@@ -54,6 +55,9 @@ class GuiController {
 
 		int m_rows, m_cols;
 		int m_screenIdx;
+		int m_maxBars;
 
 		Screen m_currentScreen;
+
+        std::mutex m_drawMutex;
 };

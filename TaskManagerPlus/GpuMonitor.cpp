@@ -57,11 +57,12 @@ static std::unique_ptr<IGpuController> createGpuController() {
 #ifdef USE_AMD
 	std::unique_ptr<ADLXController> controller = std::make_unique<ADLXController>();
 	controller->initADLX();
-	return controller;
 #endif
+
 #ifdef USE_NVIDIA
 	std::unique_ptr<NVIDIAController> controller = std::make_unique<NVIDIAController>();
 	controller->initNVML();
-	return controller;
 #endif
+
+	return controller;
 }

@@ -3,6 +3,7 @@
 #include <thread>
 #include <iostream>
 #include <iomanip>
+#define NOMINMAX
 #include <windows.h>
 #include <Pdh.h>
 #include <deque>

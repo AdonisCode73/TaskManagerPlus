@@ -42,17 +42,31 @@ void GuiController::navigateWindows() {
 	int userInput;
 	while ((userInput = getch()) != '\n') {
 		switch (userInput) {
-		case KEY_RESIZE:
+		case KEY_RESIZE: {
+			std::lock_guard<std::mutex> lock(m_drawMutex);
+			resize_term(0, 0);
 			getmaxyx(stdscr, m_rows, m_cols);
-			for (auto& pair : m_screenWindows) {
-				WINDOW* win = pair.second;
-				wresize(win, m_rows, m_cols);
+
+			for (auto& pair : m_screenGraphBoxes) {
+				if (pair.second) {
+					delwin(pair.second);
+				}
 			}
+
 			m_screenGraphBoxes.clear();
+
+			for (auto& pair : m_screenWindows) {
+				if (pair.second) {
+					delwin(pair.second);
+				}
+				pair.second = newwin(m_rows, m_cols, 0, 0);
+			}
+
 			clear();
 			refresh();
 			changeWindow();
 			break;
+		}
 		case KEY_LEFT:
 			m_screenIdx = (m_screenIdx == 0) ? NUM_WINDOWS - 1 : m_screenIdx - 1;
 			m_currentScreen = static_cast<Screen>(m_screenIdx);
@@ -112,8 +126,11 @@ void GuiController::changeWindow() {
 
 void GuiController::updatePage() {
 	while (m_isRunning) {
-		changeWindow();
-		refresh();
+		{
+			std::lock_guard<std::mutex> lock(m_drawMutex);
+			changeWindow();
+			refresh();
+		}
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }
@@ -133,8 +150,9 @@ void GuiController::drawBaseLayout(WINDOW* win, const char* title) {
 		int startX = m_cols / 2 + margin;
 		int startY = 4;
 
+		m_maxBars = graphWidth - 2;
+
 		drawGraphBox(win, startY, startX, graphHeight, graphWidth, "Utilisation Graph");
-		//drawGraphBox(win, 5, (m_cols / 2) - 22, 20, 75, "Utilisation Graph");
 	}
 	wrefresh(win);
 }
@@ -258,10 +276,12 @@ void GuiController::drawGraphBox(WINDOW* win, int startY, int startX, int height
 
 	WINDOW* graphBox = m_screenGraphBoxes[m_currentScreen];
 
-	if (!graphBox) {
-		graphBox = derwin(win, height, width, startY, startX);
-		m_screenGraphBoxes[m_currentScreen] = graphBox;
+	if (graphBox) {
+		delwin(graphBox);
 	}
+
+	graphBox = derwin(win, height, width, startY, startX);
+	m_screenGraphBoxes[m_currentScreen] = graphBox;
 
 	switch (m_currentScreen) {
 	case CPU: {
@@ -310,10 +330,13 @@ void GuiController::renderCPUGraph(WINDOW* win, int height, int width) {
 
 	wattron(win, COLOR_PAIR(1));
 
-	for (int i = 1; i < systemStatus.cpuUsage.size(); i++) {
-		double currCpuUtil = std::ceil(systemStatus.cpuUsage[i - 1] / 5.0);
-		for (int j = 0; j < currCpuUtil; j++) {
-			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
+	int dataPoints = static_cast<int>(std::min(systemStatus.cpuUsage.size(), static_cast<size_t>(m_maxBars)));
+
+	for (int i = 1; i < dataPoints; i++) {
+		double usage = systemStatus.cpuUsage[i];
+		int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
+		for (int j = 0; j < barHeight; j++) {
+			mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
 		}
 	}
 
@@ -325,10 +348,13 @@ void GuiController::renderDiskGraph(WINDOW* win, int height, int width) {
 
 	wattron(win, COLOR_PAIR(2));
 
-	for (int i = 1; i < systemStatus.diskTime.size(); i++) {
-		double currDiskUtil = std::ceil(systemStatus.diskTime[i - 1] / 5.0);
-		for (int j = 0; j < currDiskUtil; j++) {
-			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
+	int dataPoints = static_cast<int>(std::min(systemStatus.diskTime.size(), static_cast<size_t>(m_maxBars)));
+
+	for (int i = 1; i < dataPoints; i++) {
+		double usage = systemStatus.diskTime[i];
+		int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
+		for (int j = 0; j < barHeight; j++) {
+			mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
 		}
 	}
 
@@ -340,10 +366,13 @@ void GuiController::renderGPUGraph(WINDOW* win, int height, int width) {
 
 	wattron(win, COLOR_PAIR(3));
 
-	for (int i = 1; i < systemStatus.gpuUsage.size(); i++) {
-		double currGpuUtil = std::ceil(systemStatus.gpuUsage[i - 1] / 5.0);
-		for (int j = 0; j < currGpuUtil; j++) {
-			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
+	int dataPoints = static_cast<int>(std::min(systemStatus.gpuUsage.size(), static_cast<size_t>(m_maxBars)));
+
+	for (int i = 1; i < dataPoints; i++) {
+		double usage = systemStatus.gpuUsage[i];
+		int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
+		for (int j = 0; j < barHeight; j++) {
+			mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
 		}
 	}
 
@@ -355,10 +384,13 @@ void GuiController::renderMemoryGraph(WINDOW* win, int height, int width) {
 
 	wattron(win, COLOR_PAIR(4));
 
-	for (int i = 1; i < systemStatus.memoryUsage.size(); i++) {
-		double currMemoryUtil = std::ceil(systemStatus.memoryUsage[i - 1] / 5.0);
-		for (int j = 0; j < currMemoryUtil; j++) {
-			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
+	int dataPoints = static_cast<int>(std::min(systemStatus.memoryUsage.size(), static_cast<size_t>(m_maxBars)));
+
+	for (int i = 1; i < dataPoints; i++) {
+		double usage = systemStatus.memoryUsage[i]; 
+		int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
+		for (int j = 0; j < barHeight; j++) {
+			mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
 		}
 	}
 
@@ -370,10 +402,13 @@ void GuiController::renderNetworkGraph(WINDOW* win, int height, int width) {
 
 	wattron(win, COLOR_PAIR(5));
 
-	for (int i = 1; i < systemStatus.networkUsage.size(); i++) {
-		double currNetworkUtil = std::ceil(systemStatus.networkUsage[i - 1] / 5.0);
-		for (int j = 0; j < currNetworkUtil; j++) {
-			mvwaddch(win, height - j - 1, i, ACS_BLOCK);
+	int dataPoints = static_cast<int>(std::min(systemStatus.networkUsage.size(), static_cast<size_t>(m_maxBars)));
+
+	for (int i = 1; i < dataPoints; i++) {
+		double usage = systemStatus.networkUsage[i];
+		int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
+		for (int j = 0; j < barHeight; j++) {
+			mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
 		}
 	}
 
