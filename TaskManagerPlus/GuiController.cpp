@@ -13,9 +13,6 @@ void GuiController::guiInit() {
 		m_screenWindows[screen] = newwin(m_rows, m_cols, 0, 0);
 	}
 
-	m_currentScreen = HOME;
-	m_screenIdx = 0;
-
 	start_color();
 	init_pair(1, COLOR_GREEN, COLOR_BLACK);
 	init_pair(2, COLOR_YELLOW, COLOR_BLACK);
@@ -228,7 +225,7 @@ void GuiController::drawGPUPage(WINDOW* win) {
 #endif
 
 #ifdef USE_NVIDIA
-	mvwprintw(win, (m_rows / 2) + 1, 2, "GPU Temperature: %.2f%%", systemStatus.memControllerUsage.load());
+	mvwprintw(win, (m_rows / 2) + 1, 2, "GPU Memory Controller: %.2f%%", systemStatus.memControllerUsage.load());
 #endif
 	mvwprintw(win, (m_rows / 2) + 3, 2, "Total VRAM: %.2f GB", systemStatus.vramTotalMemory.load());
 	mvwprintw(win, (m_rows / 2) + 4, 2, "Available VRAM: %.2f GB", systemStatus.vramAvailMemory.load());
