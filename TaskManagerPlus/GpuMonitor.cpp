@@ -1,11 +1,12 @@
 #include "GpuMonitor.h"
 
-static std::unique_ptr<IGpuController> createGpuController();
+static std::unique_ptr<IGpuController> createGpuController(GpuMonitor& monitor);
 
 void GpuMonitor::start() {
 	initOpenCL();
 
-	std::unique_ptr<IGpuController> controller = createGpuController();
+	std::unique_ptr<IGpuController> controller = createGpuController(*this);
+	controller->init();
 	controller->update();
 	m_gpuThread = std::thread(&GpuMonitor::monitorLoop, this, std::move(controller));
 }
@@ -40,6 +41,11 @@ void GpuMonitor::initOpenCL() {
 
 	clGetDeviceIDs(platformID, CL_DEVICE_TYPE_GPU, num_devices, deviceIDs, nullptr);
 	m_deviceID = deviceIDs[0];
+
+	cl_uint vendorID;
+	clGetDeviceInfo(m_deviceID, CL_DEVICE_VENDOR_ID, sizeof(vendorID), &vendorID, nullptr);
+	m_vendorID = vendorID;
+
 	delete[] deviceIDs;
 
 	calculateTotalMem();
@@ -48,19 +54,37 @@ void GpuMonitor::initOpenCL() {
 void GpuMonitor::calculateTotalMem() {
 	cl_ulong totalMemory;
 	clGetDeviceInfo(m_deviceID, CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(cl_ulong), &totalMemory, nullptr);
-	systemStatus.vramTotalMemory = totalMemory/ (1024.0 * 1024.0 * 1024.0);
+	systemStatus.vramTotalMemory = totalMemory / (1024.0 * 1024.0 * 1024.0);
 }
 
-static std::unique_ptr<IGpuController> createGpuController() {
-#ifdef USE_AMD
-	std::unique_ptr<ADLXController> controller = std::make_unique<ADLXController>();
-	controller->initADLX();
-#endif
+static std::unique_ptr<IGpuController> createGpuController(GpuMonitor& monitor) {
+	cl_uint vendorID = monitor.getVendorID();
+	std::unique_ptr<IGpuController> controller;
 
-#ifdef USE_NVIDIA
-	std::unique_ptr<NVIDIAController> controller = std::make_unique<NVIDIAController>();
-	controller->initNVML();
-#endif
+	switch (vendorID) {
+	case GpuMonitor::VENDOR_ID_AMD:
+		controller = std::make_unique<ADLXController>();
+		break;
 
-	return controller;
+	case GpuMonitor::VENDOR_ID_NVIDIA:
+		controller = std::make_unique<NVIDIAController>();
+		break;
+
+	case GpuMonitor::VENDOR_ID_INTEL:
+		std::cerr << "Intel GPUs currently unsupported";
+		exit(1);
+		break;
+
+	case GpuMonitor::VENDOR_ID_QUALCOMM:
+		std::cerr << "Qualcomm GPUs currently unsupported";
+		exit(1);
+		break;
+
+	default:
+		std::cerr << "Unknown GPU Type!";
+		exit(1);
+		break;
+	}
+
+	 return controller;
 }

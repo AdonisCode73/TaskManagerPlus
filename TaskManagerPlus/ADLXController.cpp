@@ -1,7 +1,7 @@
 #include "ADLXController.h"
 
 #ifdef USE_AMD
-void ADLXController::initADLX() {
+void ADLXController::init() {
 	ADLX_RESULT res = ADLX_FAIL;
 
 	res = m_adlxHelper.Initialize();
@@ -62,4 +62,12 @@ void ADLXController::update() {
 		systemStatus.gpuUsage.push_front(static_cast<double>(gpuUsage));
 	}
 }
+#else
+
+void ADLXController::init() {
+	std::cerr << "Error. Make sure you are defining the appropriate GPU Vendor (USE_NVIDIA || USE_AMD) when compiling!";
+	exit(1);
+}
+
+void ADLXController::update() {}
 #endif

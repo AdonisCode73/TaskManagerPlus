@@ -151,12 +151,12 @@
     <ClCompile Include="NVIDIAController.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IGpuController.h" />
     <ClInclude Include="Include\ADLXController.h" />
     <ClInclude Include="Include\CpuMonitor.h" />
     <ClInclude Include="Include\DiskMonitor.h" />
     <ClInclude Include="Include\GpuMonitor.h" />
     <ClInclude Include="Include\GuiController.h" />
+    <ClInclude Include="Include\IGpuController.h" />
     <ClInclude Include="Include\MemoryMonitor.h" />
     <ClInclude Include="Include\MonitorUtils.h" />
     <ClInclude Include="Include\NetworkMonitor.h" />

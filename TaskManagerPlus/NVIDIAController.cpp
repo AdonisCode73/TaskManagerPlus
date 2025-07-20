@@ -1,7 +1,9 @@
 #include "NVIDIAController.h"
 
 #ifdef USE_NVIDIA
-void NVIDIAController::initNVML() {
+#include "nvml.h"
+void NVIDIAController::init() {
+	nvmlReturn_t m_result;
 	m_result = nvmlInit();
 	if (m_result != NVML_SUCCESS) {
 		std::cerr << "Failed to initialize NVML: " << std::endl;
@@ -10,6 +12,7 @@ void NVIDIAController::initNVML() {
 }
 
 void NVIDIAController::update() {
+	nvmlReturn_t m_result;
 	nvmlDevice_t device;
 	m_result = nvmlDeviceGetHandleByIndex(0, &device);
 	if (m_result != NVML_SUCCESS) {
@@ -39,4 +42,12 @@ void NVIDIAController::update() {
 		systemStatus.memControllerUsage = utilization.memory;
 	}
 }
+#else
+
+void NVIDIAController::init() {
+	std::cerr << "Error. Make sure you are defining the appropriate GPU Vendor (USE_NVIDIA || USE_AMD) when compiling!";
+	exit(1);
+}
+
+void NVIDIAController::update() {}
 #endif
