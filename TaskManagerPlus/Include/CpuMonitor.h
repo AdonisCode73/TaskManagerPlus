@@ -1,20 +1,19 @@
 #pragma once
 #include <tchar.h>
-#include "MonitorUtils.h"
+#include <thread>
+#include <Pdh.h>
+#include "MonitorBase.h"
 
-class CpuMonitor {
-
+class CpuMonitor : public MonitorBase {
 	public:
-		void start();
-		void stop();
 
 	private:
-		std::thread m_cpuThread;
-		bool m_isRunning = true;
-
 		PDH_HQUERY m_cpuQuery = nullptr;
 		PDH_HCOUNTER m_cpuTotal = nullptr;
 
-		void monitorLoop();
+		void monitorLoop() override;
+
+		void init() override;
+
 		double getUsage();
 };

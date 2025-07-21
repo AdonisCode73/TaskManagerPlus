@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GpuMonitor.h"
 #include "IGpuController.h"
 
 class NVIDIAController : public IGpuController {

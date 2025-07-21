@@ -1,4 +1,7 @@
 #include "ADLXController.h"
+#include "SystemStatus.h"
+#include <iostream>
+#include <mutex>
 
 #ifdef USE_AMD
 void ADLXController::init() {
@@ -58,7 +61,7 @@ void ADLXController::update() {
 	gpuMetrics->GPUUsage(&gpuUsage);
 	{
 		std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);
-		MonitorUtils::checkQueueSize(systemStatus.gpuUsage);
+		systemStatus.checkQueueSize(systemStatus.gpuUsage);
 		systemStatus.gpuUsage.push_front(static_cast<double>(gpuUsage));
 	}
 }

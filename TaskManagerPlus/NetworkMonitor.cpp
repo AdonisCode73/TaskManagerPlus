@@ -1,16 +1,11 @@
 #include "NetworkMonitor.h"
-
-void NetworkMonitor::start() {
+#include "SystemStatus.h"
+#include <mutex>
+/*
+NETWORK MONITOR CURRENTLY NON-FUNCTIONAL - INVESTIGATING
+*/
+void NetworkMonitor::init() {
 	getNetworkInfo();
-
-	m_networkThread = std::thread(&NetworkMonitor::monitorLoop, this);
-}
-
-void NetworkMonitor::stop() {
-	m_isRunning = false;
-	if (m_networkThread.joinable()) {
-		m_networkThread.join();
-	}
 }
 
 void NetworkMonitor::getNetworkInfo() {
@@ -72,7 +67,7 @@ void NetworkMonitor::monitorLoop() {
 		double networkUtil = (((sentBytes + recvBytes) * 8.0) / static_cast<double>(m_row.dwSpeed));
 		{
 			std::lock_guard<std::mutex> lock(systemStatus.networkMutex);
-			MonitorUtils::checkQueueSize(systemStatus.networkUsage);
+			systemStatus.checkQueueSize(systemStatus.networkUsage);
 			systemStatus.networkUsage.push_front(networkUtil * 100.0);
 		}
 		m_prevRow = m_row;

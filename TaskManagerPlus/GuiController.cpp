@@ -1,4 +1,5 @@
 ﻿#include "GuiController.h"
+#include "SystemStatus.h"
 
 void GuiController::guiInit() {
 	initscr();
@@ -30,7 +31,19 @@ void GuiController::start() {
 
 	navigateWindows();
 
-	stop();
+	guiShutdown();
+}
+
+void GuiController::stop() {
+	m_isRunning = false;
+	if (m_guiThread.joinable()) {
+		m_guiThread.join();
+	}
+}
+
+void GuiController::guiShutdown() {
+	endwin();
+	systemStatus.shutdownFlag = true;
 }
 
 void GuiController::navigateWindows() {
@@ -282,28 +295,28 @@ void GuiController::drawGraphBox(WINDOW* win, int startY, int startX, int height
 	int colourPair = static_cast<int>(m_currentScreen);
 
 	switch (m_currentScreen) {
-		case CPU: {
-			renderGraph(graphBox, systemStatus.cpuUsage, height, width, colourPair);
-			break;
-		}
-		case DISK: {
-			renderGraph(graphBox, systemStatus.diskTime, height, width, colourPair);
-			break;
-		}
-		case GPU: {
-			renderGraph(graphBox, systemStatus.gpuUsage, height, width, colourPair);
-			break;
-		}
-		case MEMORY: {
-			renderGraph(graphBox, systemStatus.memoryUsage, height, width, colourPair);
-			break;
-		}
-		case NETWORK: {
-			renderGraph(graphBox, systemStatus.networkUsage, height, width, colourPair);
-			break;
-		}
-		default:
-			break;
+	case CPU: {
+		renderGraph(graphBox, systemStatus.cpuUsage, height, width, colourPair);
+		break;
+	}
+	case DISK: {
+		renderGraph(graphBox, systemStatus.diskTime, height, width, colourPair);
+		break;
+	}
+	case GPU: {
+		renderGraph(graphBox, systemStatus.gpuUsage, height, width, colourPair);
+		break;
+	}
+	case MEMORY: {
+		renderGraph(graphBox, systemStatus.memoryUsage, height, width, colourPair);
+		break;
+	}
+	case NETWORK: {
+		renderGraph(graphBox, systemStatus.networkUsage, height, width, colourPair);
+		break;
+	}
+	default:
+		break;
 	}
 
 	box(graphBox, 0, 0);
@@ -339,12 +352,4 @@ void GuiController::renderGraph(WINDOW* win, const std::deque<double>& data, int
 	}
 
 	wattroff(win, COLOR_PAIR(colourPair));
-}
-
-void GuiController::stop() {
-	m_isRunning = false;
-	if (m_guiThread.joinable()) {
-		m_guiThread.join();
-	}
-	endwin();
 }

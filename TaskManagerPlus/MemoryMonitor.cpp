@@ -1,23 +1,11 @@
 #include "MemoryMonitor.h"
-
-void MemoryMonitor::start() {
-	update();
-	m_isRunning = true;
-	m_memoryThread = std::thread(&MemoryMonitor::monitorLoop, this);
-}
+#include "SystemStatus.h"
 
 void MemoryMonitor::update() {
 	m_memInfo.dwLength = sizeof(MEMORYSTATUSEX);
 	GlobalMemoryStatusEx(&m_memInfo);
 	calculateTotal();
 	calculateAvail();
-}
-
-void MemoryMonitor::stop() {
-	m_isRunning = false;
-	if (m_memoryThread.joinable()) {
-		m_memoryThread.join();
-	}
 }
 
 double MemoryMonitor::calculateUtilisation() {
@@ -37,10 +25,14 @@ void MemoryMonitor::monitorLoop() {
 		update();
 		{
 			std::lock_guard<std::mutex> lock(systemStatus.memoryMutex);
-			MonitorUtils::checkQueueSize(systemStatus.memoryUsage);
+			systemStatus.checkQueueSize(systemStatus.memoryUsage);
 			systemStatus.memoryUsage.push_front(calculateUtilisation());
 		}
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
+}
+
+void MemoryMonitor::init() {
+	update();
 }
 

@@ -1,18 +1,14 @@
 #pragma once
-#include "MonitorUtils.h"
+#include <thread>
+#include <windows.h>
+#include "MonitorBase.h"
 
-class MemoryMonitor {
+class MemoryMonitor : public MonitorBase {
 
 	public:
-		void start();
-
-		void stop();
 
 	private:
 		MEMORYSTATUSEX m_memInfo{};
-
-		std::thread m_memoryThread;
-		bool m_isRunning = false;
 
 		double calculateUtilisation();
 
@@ -20,7 +16,9 @@ class MemoryMonitor {
 
 		void calculateTotal();
 
-		void monitorLoop();
+		void monitorLoop() override;
+
+		void init() override;
 		
 		void update();
 };

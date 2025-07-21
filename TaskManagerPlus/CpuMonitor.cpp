@@ -1,18 +1,10 @@
 #include "CpuMonitor.h"
+#include "SystemStatus.h"
 
-void CpuMonitor::start() {
+void CpuMonitor::init() {
 	PdhOpenQuery(nullptr, NULL, &m_cpuQuery);
 	PdhAddEnglishCounter(m_cpuQuery, L"\\Processor(_Total)\\% Processor Time", NULL, &m_cpuTotal);
 	PdhCollectQueryData(m_cpuQuery);
-
-	m_cpuThread = std::thread(&CpuMonitor::monitorLoop, this);
-}
-
-void CpuMonitor::stop() {
-	m_isRunning = false;
-	if (m_cpuThread.joinable()) {
-		m_cpuThread.join();
-	}
 }
 
 double CpuMonitor::getUsage() {
@@ -27,7 +19,7 @@ void CpuMonitor::monitorLoop() {
 	while (m_isRunning) {
 		{
 			std::lock_guard<std::mutex> lock(systemStatus.cpuMutex);
-			MonitorUtils::checkQueueSize(systemStatus.cpuUsage);
+			systemStatus.checkQueueSize(systemStatus.cpuUsage);
 			systemStatus.cpuUsage.push_front(getUsage());
 		}
 		std::this_thread::sleep_for(std::chrono::seconds(1));

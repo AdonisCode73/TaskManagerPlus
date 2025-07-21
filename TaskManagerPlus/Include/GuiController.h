@@ -2,7 +2,10 @@
 #include <curses.h>
 #include <unordered_map>
 #include <algorithm>
-#include "MonitorUtils.h"
+#include <deque>
+#include <thread>
+#include <mutex>
+
 #define NUM_WINDOWS 6
 
 enum Screen {
@@ -14,11 +17,11 @@ enum Screen {
 	NETWORK 
 };
 
-class GuiController {
+class GuiController{
 
 	public:
-		void start();
 
+		void start();
 		void stop();
 
 	private:
@@ -41,17 +44,20 @@ class GuiController {
 
 		void renderGraph(WINDOW* win, const std::deque<double>& data, int height, int width, int colourPair);
 
+		void guiShutdown();
+
 		void updatePage();
 
 		std::unordered_map<Screen, WINDOW*> m_screenWindows;
 		std::unordered_map<Screen, WINDOW*> m_screenGraphBoxes;
 
-		bool m_isRunning = true;
-		std::thread m_guiThread;
 
-		int m_rows, m_cols = 0;
+		int m_rows = 0, m_cols = 0;
 		int m_screenIdx = 0;
 		int m_maxBars = 0;
+
+		bool m_isRunning = true;
+		std::thread m_guiThread;
 
 		Screen m_currentScreen = HOME;
 

@@ -1,4 +1,7 @@
 #include "NVIDIAController.h"
+#include <iostream>
+#include <mutex>
+#include "SystemStatus.h"
 
 #ifdef USE_NVIDIA
 #include "nvml.h"
@@ -37,7 +40,7 @@ void NVIDIAController::update() {
 	systemStatus.vramAvailMemory = memInfo.free / (1024.0 * 1024.0 * 1024.0);
 	{
 		std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);
-		MonitorUtils::checkQueueSize(systemStatus.gpuUsage);
+		systemStatus.checkQueueSize(systemStatus.gpuUsage);
 		systemStatus.gpuUsage.push_front(static_cast<double>(utilization.gpu));
 		systemStatus.memControllerUsage = utilization.memory;
 	}

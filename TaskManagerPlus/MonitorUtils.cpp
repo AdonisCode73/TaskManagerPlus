@@ -1,42 +1,38 @@
 #include "MonitorUtils.h"
-
-CpuMonitor cpuMonitor;
-MemoryMonitor memoryMonitor;
-GpuMonitor gpuMonitor;
-DiskMonitor diskMonitor;
-NetworkMonitor networkMonitor;
-GuiController guiController;
+#include "SystemStatus.h"
+#include <iostream>
 
 SystemStatus systemStatus;
 
+void MonitorUtils::init() {
+	launchMonitors();
 
-void MonitorUtils::start() {
-	cpuMonitor.start();
-	memoryMonitor.start();
-	gpuMonitor.start();
-	diskMonitor.start();
-	networkMonitor.start();
-	guiController.start();
-}
+	while (systemStatus.shutdownFlag == false) {
 
-bool MonitorUtils::isRunningCheck() {
-	if (std::cin.get() == '\n') {
-		return false;
 	}
-	return true;
+
+	std::cout << "Beginning Shutdown Operations.";
+
+	shutdownMonitors();
 }
 
-void MonitorUtils::stop() {
-	cpuMonitor.stop();
-	memoryMonitor.stop();
-	gpuMonitor.stop();
-	diskMonitor.stop();
-	networkMonitor.stop();
+void MonitorUtils::launchMonitors() {
+
+	m_cpuMonitor.start();
+	m_memoryMonitor.start();
+	m_gpuMonitor.start();
+	m_diskMonitor.start();
+	m_networkMonitor.start();
+	m_guiController.start();
 }
 
-void MonitorUtils::checkQueueSize(std::deque <double> statQueue) {
-	if (statQueue.size() == MAX_QUEUE_SIZE) {
-		statQueue.pop_back();
-	}
+
+void MonitorUtils::shutdownMonitors() {
+	m_guiController.stop();
+	m_networkMonitor.stop();
+	m_diskMonitor.stop();
+	m_gpuMonitor.stop();
+	m_memoryMonitor.stop();
+	m_cpuMonitor.stop();
 }
 

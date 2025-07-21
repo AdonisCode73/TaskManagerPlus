@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GpuMonitor.h"
 #include "IGpuController.h"
 
 #ifdef USE_AMD

@@ -1,13 +1,11 @@
 #pragma once
-#include "MonitorUtils.h"
+#include <windows.h>
 #include <iphlpapi.h>
+#include <thread>
+#include "MonitorBase.h"
 
-class NetworkMonitor {
+class NetworkMonitor : public MonitorBase {
 	public:
-		void start();
-
-		void stop();
-
 
 	private:
 		MIB_IFROW m_row{};
@@ -16,10 +14,9 @@ class NetworkMonitor {
 		DWORD m_interfaceIndex = 0;
 		bool m_selectedInterfaceIndex = false;
 
-		bool m_isRunning = true;
-		std::thread m_networkThread;
+		void monitorLoop() override;
 
-		void monitorLoop();
+		void init() override;
 
 		void getNetworkInfo();
 };

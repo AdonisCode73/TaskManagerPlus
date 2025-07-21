@@ -1,24 +1,21 @@
 #pragma once
-#include "MonitorUtils.h"
+#include <thread>
+#include <Pdh.h>
+#include "MonitorBase.h"
 
-class DiskMonitor {
+class DiskMonitor : public MonitorBase {
 	public:
-		void start();
-
-		void stop();
-
 	private:
 		PDH_HQUERY m_diskQuery = nullptr;
 		PDH_HCOUNTER m_readTotal = nullptr;
 		PDH_HCOUNTER m_writeTotal = nullptr;
 		PDH_HCOUNTER m_diskTime = nullptr;
 
-		bool m_isRunning = true;
-		std::thread m_diskThread;
-
 		void update();
 
-		void monitorLoop();
+		void monitorLoop() override;
+
+		void init() override;
 
 		void getUsage();
 };

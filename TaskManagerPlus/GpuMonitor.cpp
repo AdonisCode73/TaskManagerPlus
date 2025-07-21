@@ -1,28 +1,22 @@
 #include "GpuMonitor.h"
+#include "SystemStatus.h"
+#include <iostream>
 
 static std::unique_ptr<IGpuController> createGpuController(GpuMonitor& monitor);
 
-void GpuMonitor::start() {
-	initOpenCL();
-
-	std::unique_ptr<IGpuController> controller = createGpuController(*this);
-	controller->init();
-	controller->update();
-	m_gpuThread = std::thread(&GpuMonitor::monitorLoop, this, std::move(controller));
-}
-
-void GpuMonitor::stop() {
-	m_isRunning = false;
-	if (m_gpuThread.joinable()) {
-		m_gpuThread.join();
-	}
-}
-
-void GpuMonitor::monitorLoop(std::unique_ptr<IGpuController> controllerObj) {
+void GpuMonitor::monitorLoop() {
 	while (m_isRunning) {
-		controllerObj->update();
+		m_controller->update();
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
+}
+
+void GpuMonitor::init() {
+	initOpenCL();
+
+	m_controller = createGpuController(*this);
+	m_controller->init();
+	m_controller->update();
 }
 
 void GpuMonitor::initOpenCL() {

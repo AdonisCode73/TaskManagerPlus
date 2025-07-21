@@ -1,6 +1,7 @@
 #include "DiskMonitor.h"
+#include "SystemStatus.h"
 
-void DiskMonitor::start() {
+void DiskMonitor::init() {
 	update();
 
 	PdhOpenQuery(nullptr, NULL, &m_diskQuery);
@@ -8,15 +9,6 @@ void DiskMonitor::start() {
 	PdhAddCounter(m_diskQuery, L"\\PhysicalDisk(_Total)\\Disk Write Bytes/sec", NULL, &m_writeTotal);
 	PdhAddCounter(m_diskQuery, L"\\PhysicalDisk(_Total)\\% Disk Time", 0, &m_diskTime);
 	PdhCollectQueryData(m_diskQuery);
-
-	m_diskThread = std::thread(&DiskMonitor::monitorLoop, this);
-}
-
-void DiskMonitor::stop() {
-	m_isRunning = false;
-	if (m_diskThread.joinable()) {
-		m_diskThread.join();
-	}
 }
 
 void DiskMonitor::update() {
@@ -43,7 +35,7 @@ void DiskMonitor::getUsage() {
 	systemStatus.writeDisk = writeCounterVal.doubleValue / 1024.0;
 	{
 		std::lock_guard<std::mutex> lock(systemStatus.diskMutex);
-		MonitorUtils::checkQueueSize(systemStatus.diskTime);
+		systemStatus.checkQueueSize(systemStatus.diskTime);
 		systemStatus.diskTime.push_front(diskTimeCounterVal.doubleValue);
 	}
 }
