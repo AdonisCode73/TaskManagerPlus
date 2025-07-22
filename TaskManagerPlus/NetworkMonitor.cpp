@@ -1,9 +1,7 @@
 #include "NetworkMonitor.h"
 #include "SystemStatus.h"
 #include <mutex>
-/*
-NETWORK MONITOR CURRENTLY NON-FUNCTIONAL - INVESTIGATING
-*/
+
 void NetworkMonitor::init() {
 	getNetworkInfo();
 }
@@ -32,7 +30,8 @@ void NetworkMonitor::getNetworkInfo() {
 
 			if (tempRow.dwOperStatus == IF_OPER_STATUS_OPERATIONAL &&
 				tempRow.dwType != IF_TYPE_SOFTWARE_LOOPBACK &&
-				tempRow.dwSpeed > 0) {
+				tempRow.dwSpeed > 0 &&
+				(tempRow.dwOutOctets > 0 || tempRow.dwInOctets > 0)) {
 
 				m_interfaceIndex = tempRow.dwIndex;
 				m_selectedInterfaceIndex = true;

@@ -38,7 +38,7 @@ struct SystemStatus {
 
 	std::atomic <bool> shutdownFlag = false;
 
-	void checkQueueSize(std::deque <double> statQueue) {
+	inline void checkQueueSize(std::deque <double> &statQueue) {
 		if (statQueue.size() == MAX_QUEUE_SIZE) {
 			statQueue.pop_back();
 		}
