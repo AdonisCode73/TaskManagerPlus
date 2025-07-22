@@ -14,7 +14,7 @@ public:
 	static constexpr cl_uint VENDOR_ID_INTEL = 0x8086; 
 	static constexpr cl_uint VENDOR_ID_QUALCOMM = 0x5143;
 
-	cl_uint getVendorID() const { return m_vendorID; }
+	inline cl_uint getVendorID() const { return m_vendorID; }
 
 private:
 	

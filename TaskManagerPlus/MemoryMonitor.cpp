@@ -1,23 +1,24 @@
 #include "MemoryMonitor.h"
 #include "SystemStatus.h"
 
-void MemoryMonitor::update() {
+
+void MemoryMonitor::init() {
 	m_memInfo.dwLength = sizeof(MEMORYSTATUSEX);
-	GlobalMemoryStatusEx(&m_memInfo);
-	calculateTotal();
-	calculateAvail();
+	update();
 }
 
 double MemoryMonitor::calculateUtilisation() {
 	return 100 - ((systemStatus.ramAvailMemory / systemStatus.ramTotalMemory) * 100); 
 }
 
-void MemoryMonitor::calculateTotal() {
+void MemoryMonitor::calculateMemory() {
 	systemStatus.ramTotalMemory = m_memInfo.ullTotalPhys / (1024.0 * 1024.0 * 1024.0);
+	systemStatus.ramAvailMemory = m_memInfo.ullAvailPhys / (1024.0 * 1024.0 * 1024.0);
 }
 
-void MemoryMonitor::calculateAvail() {
-	systemStatus.ramAvailMemory = m_memInfo.ullAvailPhys / (1024.0 * 1024.0 * 1024.0);
+void MemoryMonitor::update() {
+	GlobalMemoryStatusEx(&m_memInfo);
+	calculateMemory();
 }
 
 void MemoryMonitor::monitorLoop() {
@@ -32,7 +33,4 @@ void MemoryMonitor::monitorLoop() {
 	}
 }
 
-void MemoryMonitor::init() {
-	update();
-}
 

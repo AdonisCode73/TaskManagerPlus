@@ -2,7 +2,7 @@
 #include "SystemStatus.h"
 #include <iostream>
 
-static std::unique_ptr<IGpuController> createGpuController(GpuMonitor& monitor);
+static std::unique_ptr<IGpuController> createGpuController(cl_uint vendorID);
 
 void GpuMonitor::monitorLoop() {
 	while (m_isRunning) {
@@ -14,7 +14,9 @@ void GpuMonitor::monitorLoop() {
 void GpuMonitor::init() {
 	initOpenCL();
 
-	m_controller = createGpuController(*this);
+	cl_uint vendorID = getVendorID();
+
+	m_controller = createGpuController(vendorID);
 	m_controller->init();
 	m_controller->update();
 }
@@ -51,8 +53,7 @@ void GpuMonitor::calculateTotalMem() {
 	systemStatus.vramTotalMemory = totalMemory / (1024.0 * 1024.0 * 1024.0);
 }
 
-static std::unique_ptr<IGpuController> createGpuController(GpuMonitor& monitor) {
-	cl_uint vendorID = monitor.getVendorID();
+static std::unique_ptr<IGpuController> createGpuController(cl_uint vendorID) {
 	std::unique_ptr<IGpuController> controller;
 
 	switch (vendorID) {
