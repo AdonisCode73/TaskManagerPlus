@@ -9,7 +9,7 @@ Monitoring tool used to graph utilisation % of system components and track key m
 - Real-time metrics for hardware
 
 ## Motivation
-My motivation for this was largely just for fun but also some curiosity about hardware monitoring.
+My motivation for this was largely just for fun but also some curiosity about hardware monitoring and as a means of improving my C++ ability.
 
 ## 3rd Party Tools / APIs
 - ADLX
@@ -48,7 +48,7 @@ Cmake - MSVC
 - cd to project directory where CMakeLists.txt is located
 - cd build
 - cmake .. -G "Visual Studio 17 2022" -DUSE_AMD=ON (for AMD GPU)
-- cmake .. -G "Visual Studio 17 2022" -DUSE_AMD=OFF (for NVIDIA GPU)
+- cmake .. -G "Visual Studio 17 2022" -DUSE_AMD=OFF -DCUDA_PATH={Path to your cuda directory e.g "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.0"} (for NVIDIA GPU)
 - cmake --build . --config Release
 - Run the .exe located in build/Release
 
@@ -56,7 +56,7 @@ Cmake - MinGW
 - cd to project directory where CMakeLists.txt is located
 - cd build
 - cmake .. -G "MinGW Makefiles" -DUSE_AMD=ON (for AMD GPU)
-- cmake .. -G "MinGW Makefiles" -DUSE_AMD=OFF (for NVIDIA GPU)
+- cmake .. -G "MinGW Makefiles" -DUSE_AMD=OFF -DCUDA_PATH={Path to your cuda directory e.g "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.0"} (for NVIDIA GPU)
 - cmake --build .
 - Run the .exe in build/
 
