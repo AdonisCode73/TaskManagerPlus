@@ -6,60 +6,59 @@
 #include <thread>
 #include <mutex>
 
-#define NUM_WINDOWS 6
+class GuiController {
 
-enum Screen {
-	HOME, 
-	CPU, 
-	DISK, 
-	GPU, 
-	MEMORY, 
-	NETWORK 
-};
+public:
 
-class GuiController{
+	static constexpr int SCREEN_COUNT = 6;
 
-	public:
+	void start();
+	void stop();
 
-		void start();
-		void stop();
+protected:
 
-	private:
-		void guiInit();
+	enum class Screen {
+		HOME,
+		CPU,
+		DISK,
+		GPU,
+		MEMORY,
+		NETWORK
+	};
 
-		void navigateWindows();
+private:
+	enum class HeaderType {
+		Main,
+		Sub
+	};
 
-		void changeWindow();
+	void guiInit();
 
-		void drawBaseLayout(WINDOW* win, const char* title);
+	void updatePage();
+	void navigateWindows();
+	void changeWindow();
 
-		void drawGraphBox(WINDOW* parent, int startY, int startX, int height, int width, const char* title);
+	const char* getHeader(HeaderType type) const;
 
-		void drawHomePage(WINDOW* win);
-		void drawCPUPage(WINDOW* win);
-		void drawDiskPage(WINDOW* win);
-		void drawGPUPage(WINDOW* win);
-		void drawMemoryPage(WINDOW* win);
-		void drawNetworkPage(WINDOW* win);
+	void drawBaseLayout(WINDOW* win, const char* header);
+	void drawPage(WINDOW* win, Screen screen, const char* header);
 
-		void renderGraph(WINDOW* win, const std::deque<double>& data, int height, int width, int colourPair);
+	void drawGraphBox(WINDOW* parent, int startY, int startX, int height, int width, const char* title);
+	void renderGraph(WINDOW* win, const std::deque<double>& data, int height, int colourPair);
 
-		void guiShutdown();
+	void guiShutdown();
 
-		void updatePage();
+	std::unordered_map<Screen, WINDOW*> m_screenWindows;
+	std::unordered_map<Screen, WINDOW*> m_screenGraphBoxes;
 
-		std::unordered_map<Screen, WINDOW*> m_screenWindows;
-		std::unordered_map<Screen, WINDOW*> m_screenGraphBoxes;
+	int m_rows = 0, m_cols = 0;
+	int m_screenIdx = 0;
+	int m_maxBars = 0;
 
+	bool m_isRunning = true;
+	std::thread m_guiThread;
 
-		int m_rows = 0, m_cols = 0;
-		int m_screenIdx = 0;
-		int m_maxBars = 0;
+	Screen m_currentScreen = Screen::HOME;
 
-		bool m_isRunning = true;
-		std::thread m_guiThread;
-
-		Screen m_currentScreen = HOME;
-
-        std::mutex m_drawMutex;
+	std::mutex m_drawMutex;
 };

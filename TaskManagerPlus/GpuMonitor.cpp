@@ -57,10 +57,12 @@ static std::unique_ptr<IGpuController> createGpuController(const cl_uint vendorI
 	switch (vendorID) {
 	case GpuMonitor::VENDOR_ID_AMD:
 		controller = std::make_unique<ADLXController>();
+		systemStatus.gpuType = GpuType::AMD;
 		break;
 
 	case GpuMonitor::VENDOR_ID_NVIDIA:
 		controller = std::make_unique<NVIDIAController>();
+		systemStatus.gpuType = GpuType::NVIDIA;
 		break;
 
 	case GpuMonitor::VENDOR_ID_INTEL:
