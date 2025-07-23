@@ -42,8 +42,6 @@ Visual Studio - NVIDIA GPU:
 - Click green play button
   
 ### CMAKE
-NVIDIA GPU: Add path to CUDA include directory under 'target_include_directories' || Add path to nvml.lib located in CUDA lib x64 directory under 'target_link_libraries'
-
 Cmake - MSVC
 - cd to project directory where CMakeLists.txt is located
 - cd build
