@@ -5,7 +5,7 @@ void GuiController::guiInit() {
 	initscr();
 	noecho();
 	curs_set(FALSE);
-	keypad(stdscr, TRUE);
+	keypad(stdscr, true);
 
 	getmaxyx(stdscr, m_rows, m_cols);
 
@@ -114,7 +114,9 @@ void GuiController::updatePage() {
 }
 
 void GuiController::drawPage(WINDOW* win, Screen screen, const char* header) {
-	mvwprintw(win, (m_rows / 2) - 2, 2, "%s", header);
+	int middleRow = m_rows / 2;
+
+	mvwprintw(win, middleRow - 2, 2, "%s", header);
 
 	switch (screen) {
 	case Screen::HOME: {
@@ -141,24 +143,24 @@ void GuiController::drawPage(WINDOW* win, Screen screen, const char* header) {
 		if (!systemStatus.cpuUsage.empty()) {
 			{
 				std::lock_guard<std::mutex> lock(systemStatus.cpuMutex);
-				mvwprintw(win, (m_rows / 2), 2, "CPU Utilisation: %.2f%%", systemStatus.cpuUsage.front());
+				mvwprintw(win, middleRow, 2, "CPU Utilisation: %.2f%%", systemStatus.cpuUsage.front());
 			}
 		}
 		break;
 	}
 
 	case Screen::DISK: {
-		mvwprintw(win, (m_rows / 2), 2, "Write Speed: %.2f KB/s", systemStatus.writeDisk.load());
-		mvwprintw(win, (m_rows / 2) + 1, 2, "Read Speed: %.2f KB/s", systemStatus.readDisk.load());
+		mvwprintw(win, middleRow, 2, "Write Speed: %.2f KB/s", systemStatus.writeDisk.load());
+		mvwprintw(win, middleRow + 1, 2, "Read Speed: %.2f KB/s", systemStatus.readDisk.load());
 		if (!systemStatus.diskTime.empty()) {
 			{
 				std::lock_guard<std::mutex> lock(systemStatus.diskMutex);
-				mvwprintw(win, (m_rows / 2) + 2, 2, "Disk Utilisation: %.2f%%", systemStatus.diskTime.front());
+				mvwprintw(win, middleRow + 2, 2, "Disk Utilisation: %.2f%%", systemStatus.diskTime.front());
 			}
 		}
 
-		mvwprintw(win, (m_rows / 2) + 4, 2, "Total Space: %.2f GB", systemStatus.totalDisk.load());
-		mvwprintw(win, (m_rows / 2) + 5, 2, "Available Space: %.2f GB", systemStatus.availDisk.load());
+		mvwprintw(win, middleRow + 4, 2, "Total Space: %.2f GB", systemStatus.totalDisk.load());
+		mvwprintw(win, middleRow + 5, 2, "Available Space: %.2f GB", systemStatus.availDisk.load());
 
 		wrefresh(win);
 		break;
@@ -168,20 +170,20 @@ void GuiController::drawPage(WINDOW* win, Screen screen, const char* header) {
 		if (!systemStatus.gpuUsage.empty()) {
 			{
 				std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);
-				mvwprintw(win, (m_rows / 2), 2, "GPU Usage: %.2f%%", systemStatus.gpuUsage.front());
+				mvwprintw(win, middleRow, 2, "GPU Usage: %.2f%%", systemStatus.gpuUsage.front());
 			}
 		}
 
 		if (systemStatus.gpuType == GpuType::AMD) {
-			mvwprintw(win, (m_rows / 2) + 1, 2, "GPU Temperature: %.1f%°c", systemStatus.gpuTemperature.load());
-			mvwprintw(win, (m_rows / 2) + 5, 2, "GPU Clock Speed: %.2f Mhz", systemStatus.gpuClockSpeed.load());
+			mvwprintw(win, middleRow + 1, 2, "GPU Temperature: %.1f%°c", systemStatus.gpuTemperature.load());
+			mvwprintw(win, middleRow + 5, 2, "GPU Clock Speed: %.2f Mhz", systemStatus.gpuClockSpeed.load());
 		}
 		else if (systemStatus.gpuType == GpuType::NVIDIA) {
-			mvwprintw(win, (m_rows / 2) + 1, 2, "GPU Memory Controller: %.2f%%", systemStatus.memControllerUsage.load());
+			mvwprintw(win, middleRow + 1, 2, "GPU Memory Controller: %.2f%%", systemStatus.memControllerUsage.load());
 		}
 
-		mvwprintw(win, (m_rows / 2) + 3, 2, "Total VRAM: %.2f GB", systemStatus.vramTotalMemory.load());
-		mvwprintw(win, (m_rows / 2) + 4, 2, "Available VRAM: %.2f GB", systemStatus.vramAvailMemory.load());
+		mvwprintw(win, middleRow + 3, 2, "Total VRAM: %.2f GB", systemStatus.vramTotalMemory.load());
+		mvwprintw(win, middleRow + 4, 2, "Available VRAM: %.2f GB", systemStatus.vramAvailMemory.load());
 		break;
 	}
 
@@ -189,12 +191,12 @@ void GuiController::drawPage(WINDOW* win, Screen screen, const char* header) {
 		if (!systemStatus.memoryUsage.empty()) {
 			{
 				std::lock_guard<std::mutex> lock(systemStatus.memoryMutex);
-				mvwprintw(win, (m_rows / 2), 2, "RAM Usage: %.2f%%", systemStatus.memoryUsage.front());
+				mvwprintw(win, middleRow, 2, "RAM Usage: %.2f%%", systemStatus.memoryUsage.front());
 			}
 		}
 
-		mvwprintw(win, (m_rows / 2) + 2, 2, "Total RAM: %.2f GB", systemStatus.ramTotalMemory.load());
-		mvwprintw(win, (m_rows / 2) + 3, 2, "Available RAM: %.2f GB", systemStatus.ramAvailMemory.load());
+		mvwprintw(win, middleRow + 2, 2, "Total RAM: %.2f GB", systemStatus.ramTotalMemory.load());
+		mvwprintw(win, middleRow + 3, 2, "Available RAM: %.2f GB", systemStatus.ramAvailMemory.load());
 		wrefresh(win);
 		break;
 	}
@@ -203,12 +205,12 @@ void GuiController::drawPage(WINDOW* win, Screen screen, const char* header) {
 		if (!systemStatus.networkUsage.empty()) {
 			{
 				std::lock_guard<std::mutex> lock(systemStatus.networkMutex);
-				mvwprintw(win, (m_rows / 2), 2, "Network Usage: %.2f%%", systemStatus.networkUsage.front());
+				mvwprintw(win, middleRow, 2, "Network Usage: %.2f%%", systemStatus.networkUsage.front());
 			}
 		}
 
-		mvwprintw(win, (m_rows / 2) + 2, 2, "Network Bytes Sent: %.2f Kbps", systemStatus.sendNetwork.load());
-		mvwprintw(win, (m_rows / 2) + 3, 2, "Network Bytes Received: %.2f Kbps", systemStatus.receiveNetwork.load());
+		mvwprintw(win, middleRow + 2, 2, "Network Bytes Sent: %.2f Kbps", systemStatus.sendNetwork.load());
+		mvwprintw(win, middleRow + 3, 2, "Network Bytes Received: %.2f Kbps", systemStatus.receiveNetwork.load());
 		break;
 	}
 

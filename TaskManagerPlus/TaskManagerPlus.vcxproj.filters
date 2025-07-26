@@ -83,9 +83,6 @@
     <ClInclude Include="Include\SystemStatus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\IMonitor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\MonitorBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>

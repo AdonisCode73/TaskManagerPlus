@@ -157,7 +157,6 @@
     <ClInclude Include="Include\GpuMonitor.h" />
     <ClInclude Include="Include\GuiController.h" />
     <ClInclude Include="Include\IGpuController.h" />
-    <ClInclude Include="Include\IMonitor.h" />
     <ClInclude Include="Include\MemoryMonitor.h" />
     <ClInclude Include="Include\MonitorBase.h" />
     <ClInclude Include="Include\MonitorUtils.h" />
