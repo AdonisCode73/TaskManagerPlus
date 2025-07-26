@@ -1,17 +1,16 @@
 #pragma once
 
-#include "IMonitor.h"
 #include <thread>
 
-class MonitorBase : public IMonitor {
+class MonitorBase {
 public:
-	void start() override {
+	void start() {
 		m_isRunning = true;
 		init();
 		m_thread = std::thread(&MonitorBase::monitorLoop, this);
 	}
 
-	void stop() override {
+	void stop() {
 		m_isRunning = false;
 		if (m_thread.joinable()) {
 			m_thread.join();
