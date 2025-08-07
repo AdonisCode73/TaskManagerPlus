@@ -17,6 +17,8 @@ public:
 		}
 	}
 
+	virtual ~MonitorBase() = default;
+
 protected:
 	bool m_isRunning = false;
 	std::thread m_thread;

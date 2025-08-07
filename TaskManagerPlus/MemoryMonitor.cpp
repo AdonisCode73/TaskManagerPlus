@@ -4,6 +4,7 @@
 
 void MemoryMonitor::init() {
 	m_memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+	calculateMemory();
 	update();
 }
 
@@ -13,12 +14,11 @@ double MemoryMonitor::calculateUtilisation() {
 
 void MemoryMonitor::calculateMemory() {
 	systemStatus.ramTotalMemory = m_memInfo.ullTotalPhys / (1024.0 * 1024.0 * 1024.0);
-	systemStatus.ramAvailMemory = m_memInfo.ullAvailPhys / (1024.0 * 1024.0 * 1024.0);
 }
 
 void MemoryMonitor::update() {
 	GlobalMemoryStatusEx(&m_memInfo);
-	calculateMemory();
+	systemStatus.ramAvailMemory = m_memInfo.ullAvailPhys / (1024.0 * 1024.0 * 1024.0);
 }
 
 void MemoryMonitor::monitorLoop() {

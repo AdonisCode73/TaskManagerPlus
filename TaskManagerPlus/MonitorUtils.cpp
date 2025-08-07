@@ -7,7 +7,7 @@ SystemStatus systemStatus;
 void MonitorUtils::init() {
 	launchMonitors();
 
-	while (!systemStatus.shutdownFlag) {}
+	while (!systemStatus.shutdownFlag);
 
 	std::cout << "Beginning Shutdown Operations...\n";
 
