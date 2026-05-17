@@ -13,7 +13,7 @@ public:
 
 private:
 	void launchMonitors();
-	void shutdownMonitors();
+	void shutdownMonitors(); 
 
 	CpuMonitor m_cpuMonitor;
 	MemoryMonitor m_memoryMonitor;

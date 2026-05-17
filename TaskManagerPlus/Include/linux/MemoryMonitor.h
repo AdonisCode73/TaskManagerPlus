@@ -9,10 +9,7 @@ private:
 
     void monitorLoop() override;
 
-    void readSample();
-
-    long m_totalMemory = 0;
-    long m_availMemory = 0;
+    void readSample(); 
 
     double m_memoryUsage = 0;
 };

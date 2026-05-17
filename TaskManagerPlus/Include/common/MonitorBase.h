@@ -1,6 +1,7 @@
 #pragma once
 
 #include <thread>
+#include <fstream>
 
 class MonitorBase {
 public:
@@ -25,4 +26,11 @@ protected:
 
 	virtual void init() = 0;
 	virtual void monitorLoop() = 0;
+
+    static long readSysfs(const std::string &path) {
+        std::ifstream stat(path);
+        long value = 0;
+        stat >> value;
+        return value;
+    }
 };

@@ -2,7 +2,7 @@
 #include "SystemStatus.h"
 #include <fstream>
 
-void CpuMonitor::init(){
+void CpuMonitor::init(){ 
     m_previousSample = readSample();
 }
 
@@ -24,9 +24,10 @@ void CpuMonitor::monitorLoop(){
 CpuMonitor::CpuSample CpuMonitor::readSample(){
 
     std::ifstream stats("/proc/stat");
-
+    
+    std::string label;
     long user, nice, sys, idle, iowait, irq, softirq;
-    stats >> user >> nice >> sys >> idle >> iowait >> irq >> softirq;
+    stats >> label >> user >> nice >> sys >> idle >> iowait >> irq >> softirq;
 
     CpuSample sample;
     sample.active = user + nice + sys + irq + softirq;

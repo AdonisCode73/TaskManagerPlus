@@ -33,4 +33,3 @@ void MonitorUtils::shutdownMonitors() {
 	m_memoryMonitor.stop();
 	m_cpuMonitor.stop();
 }
-
