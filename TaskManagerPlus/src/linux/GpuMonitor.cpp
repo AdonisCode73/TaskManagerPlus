@@ -1,5 +1,7 @@
 #include "GpuMonitor.h"
 #include "SystemStatus.h"
+#include <chrono>
+#include <thread>
 
 void GpuMonitor::init(){
     readSample();
@@ -13,6 +15,8 @@ void GpuMonitor::monitorLoop(){
             systemStatus.checkQueueSize(systemStatus.gpuUsage);
             systemStatus.gpuUsage.push_front(m_gpuUtil);
         }
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
 

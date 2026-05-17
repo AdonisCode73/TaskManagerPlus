@@ -20,6 +20,7 @@ void DiskMonitor::monitorLoop(){
         }
 
         m_prevSample = m_currentSample;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
 

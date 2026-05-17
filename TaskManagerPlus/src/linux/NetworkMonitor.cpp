@@ -16,6 +16,7 @@ void NetworkMonitor::monitorLoop(){
         }
 
         m_prevSample = m_currentSample;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
 
@@ -33,9 +34,13 @@ NetworkMonitor::NetworkSample NetworkMonitor::readSample(){
 void NetworkMonitor::computeDelta(){
     unsigned long rxDelta = m_currentSample.rx - m_prevSample.rx;
     unsigned long txDelta = m_currentSample.tx - m_prevSample.tx;
+    unsigned long linkSpeed = readSysfs("/sys/class/net/enp42s0/speed"); // Mbps
 
-    systemStatus.sendNetwork = (txDelta / 1024.0) / 1024.0;
-    systemStatus.receiveNetwork = (rxDelta / 1024.0) / 1024.0;
+    double linkSpeedBps = linkSpeed * 1000.0 * 1000.0;
+    double deltaBits = (rxDelta + txDelta) * 8.0;
 
-    m_networkUtil = ((rxDelta + txDelta) * 8.0) / (1000.0 * 1024.0 * 1024.0) * 100;
+    systemStatus.sendNetwork = (txDelta * 8) / 1000.0;
+    systemStatus.receiveNetwork = (rxDelta * 8) / 1000.0;
+
+    m_networkUtil = (deltaBits / linkSpeedBps) * 100.0;
 }

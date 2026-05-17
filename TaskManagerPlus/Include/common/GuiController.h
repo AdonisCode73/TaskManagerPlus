@@ -44,7 +44,7 @@ private:
 	void drawPage(WINDOW* win, Screen screen, const char* header);
 
 	void drawGraphBox(WINDOW* parent, int startY, int startX, int height, int width, const char* title);
-	void renderGraph(WINDOW* win, const std::deque<double>& data, int height, int colourPair);
+	void renderGraph(WINDOW* win, const std::deque<double> data, int height, int colourPair);
 
 	void guiShutdown();
 

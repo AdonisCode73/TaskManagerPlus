@@ -38,10 +38,6 @@ void MemoryMonitor::readSample(){
     stat >> label >> availMem;
     systemStatus.ramAvailMemory = (availMem / 1024.0) / 1024.0;
 
-    //std::cout << label << " " << availMem << "\n";
-
     long usedMemory = totalMem - availMem;
-    m_memoryUsage = (static_cast<double>(usedMemory) / static_cast<double>(totalMem)) * 100.0; 
-    
-    std::cout << m_memoryUsage << std::endl;
+    m_memoryUsage = (static_cast<double>(usedMemory) / static_cast<double>(totalMem)) * 100.0;  
 }

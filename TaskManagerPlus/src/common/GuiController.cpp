@@ -1,6 +1,8 @@
 ﻿#include "GuiController.h"
 #include "SystemStatus.h"
+#include "curses.h"
 #include <cstring>
+#include <mutex>
 
 void GuiController::guiInit() {
   initscr();
@@ -40,12 +42,28 @@ void GuiController::stop() {
   if (m_guiThread.joinable()) {
     m_guiThread.join();
   }
-}
 
-void GuiController::guiShutdown() {
+  for (auto &pair : m_screenGraphBoxes) {
+    if (pair.second) {
+      delwin(pair.second);
+      pair.second = nullptr;
+    }
+  }
+  m_screenGraphBoxes.clear();
+
+  for (auto &pair : m_screenWindows) {
+    if (pair.second) {
+      delwin(pair.second);
+      pair.second = nullptr;
+    }
+  }
+  m_screenWindows.clear();
+
   endwin();
   systemStatus.shutdownFlag = true;
 }
+
+void GuiController::guiShutdown() { stop(); }
 
 void GuiController::navigateWindows() {
   changeWindow();
@@ -289,22 +307,27 @@ void GuiController::drawGraphBox(WINDOW *win, int startY, int startX,
 
   switch (m_currentScreen) {
   case Screen::CPU: {
+    std::lock_guard<std::mutex> lock(systemStatus.cpuMutex);
     renderGraph(graphBox, systemStatus.cpuUsage, height, colourPair);
     break;
   }
   case Screen::DISK: {
+    std::lock_guard<std::mutex> lock(systemStatus.diskMutex);
     renderGraph(graphBox, systemStatus.diskTime, height, colourPair);
     break;
   }
   case Screen::GPU: {
+    std::lock_guard<std::mutex> lock(systemStatus.gpuMutex);
     renderGraph(graphBox, systemStatus.gpuUsage, height, colourPair);
     break;
   }
   case Screen::MEMORY: {
+    std::lock_guard<std::mutex> lock(systemStatus.memoryMutex);
     renderGraph(graphBox, systemStatus.memoryUsage, height, colourPair);
     break;
   }
   case Screen::NETWORK: {
+    std::lock_guard<std::mutex> lock(systemStatus.networkMutex);
     renderGraph(graphBox, systemStatus.networkUsage, height, colourPair);
     break;
   }
@@ -330,7 +353,7 @@ void GuiController::drawGraphBox(WINDOW *win, int startY, int startX,
   wrefresh(graphBox);
 }
 
-void GuiController::renderGraph(WINDOW *win, const std::deque<double> &data,
+void GuiController::renderGraph(WINDOW *win, const std::deque<double> data,
                                 const int height, const int colourPair) {
   werase(win);
 
@@ -343,7 +366,11 @@ void GuiController::renderGraph(WINDOW *win, const std::deque<double> &data,
     double usage = data[i];
     int barHeight = static_cast<int>(usage / 100.0 * (height - 2));
     for (int j = 0; j < barHeight; j++) {
+#ifdef _WIN32
       mvwaddch(win, height - j - 2, i + 1, ACS_BLOCK);
+#elif __linux__
+      mvwaddch(win, height - j - 2, i + 1, '#');
+#endif
     }
   }
 
